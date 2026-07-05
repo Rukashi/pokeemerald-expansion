@@ -106,8 +106,10 @@
 #define FLAG_RESCUED_BIRCH                       0x52
 #define FLAG_LEGENDARIES_IN_SOOTOPOLIS           0x53
 
-#define FLAG_UNUSED_0x054                    0x54  // Unused Flag
-#define FLAG_UNUSED_0x055                    0x55  // Unused Flag
+// #define FLAG_UNUSED_0x054                    0x54  // Unused Flag
+#define FLAG_SHARE_EXP                       0x54  // Exp. Share
+// #define FLAG_UNUSED_0x055                    0x55  // Unused Flag
+#define FLAG_DOWSING_MACHINE                 0x55  // Dowsing Machine
 
 #define FLAG_HIDE_CONTEST_POKE_BALL          0x56  // Always set after new game, object it hides is added directly
 #define FLAG_MET_RIVAL_MOM                   0x57
@@ -123,9 +125,13 @@
 #define FLAG_MET_TEAM_AQUA_HARBOR            0x61
 #define FLAG_TV_EXPLAINED                    0x62
 #define FLAG_MAUVILLE_GYM_BARRIERS_STATE     0x63
-#define FLAG_MOSSDEEP_GYM_SWITCH_1           0x64 // Leftover from the RS version of Mossdeep Gym, functionally unused
-#define FLAG_MOSSDEEP_GYM_SWITCH_2           0x65 //
-#define FLAG_MOSSDEEP_GYM_SWITCH_3           0x66 //
+// #define FLAG_MOSSDEEP_GYM_SWITCH_1           0x64 // Leftover from the RS version of Mossdeep Gym, functionally unused
+// #define FLAG_MOSSDEEP_GYM_SWITCH_2           0x65 //
+// #define FLAG_MOSSDEEP_GYM_SWITCH_3           0x66 //
+// #define FLAG_MOSSDEEP_GYM_SWITCH_4           0x67 //
+#define FLAG_DEXNAV_SEARCHING                0x64 // Searching with Dexnav
+#define FLAG_DEXNAV_GET                      0x65 // Dexnav obtained
+#define FLAG_DEXNAV_DETECTOR_MODE            0x66 // In Dexnav detector mode
 #define FLAG_MOSSDEEP_GYM_SWITCH_4           0x67 //
 
 #define FLAG_UNUSED_0x068                    0x68  // Unused Flag
