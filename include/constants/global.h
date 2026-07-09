@@ -110,11 +110,11 @@ enum Language
 #define ROAMER_COUNT 1 // Number of maximum concurrent active roamers
 
 // Bag constants
-#define BAG_ITEMS_COUNT 30
-#define BAG_KEYITEMS_COUNT 30
-#define BAG_POKEBALLS_COUNT 16
-#define BAG_TMHM_COUNT 64
-#define BAG_BERRIES_COUNT 46
+#define BAG_ITEMS_COUNT 389 //30
+#define BAG_KEYITEMS_COUNT 74 //30
+#define BAG_POKEBALLS_COUNT 28 //16
+#define BAG_TMHM_COUNT 308
+#define BAG_BERRIES_COUNT 67 //46
 
 // Number of facilities for Ranking Hall.
 // 7 facilities for single mode + tower double mode + tower multi mode.

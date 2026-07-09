@@ -3807,7 +3807,7 @@ static void DebugAction_PCBag_Fill_PocketItems(u8 taskId)
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
         if (GetItemPocket(itemId) == POCKET_ITEMS && CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
-            AddBagItem(itemId, MAX_BAG_ITEM_CAPACITY);
+            AddBagItem(itemId, itemId - 27); //MAX_BAG_ITEM_CAPACITY
     }
 }
 
@@ -3816,7 +3816,7 @@ static void DebugAction_PCBag_Fill_PocketPokeBalls(u8 taskId)
     for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
     {
         if (CheckBagHasSpace(gPokeBalls[ballId].itemId, MAX_BAG_ITEM_CAPACITY))
-            AddBagItem(gPokeBalls[ballId].itemId, MAX_BAG_ITEM_CAPACITY);
+            AddBagItem(gPokeBalls[ballId].itemId, ballId + 1); //MAX_BAG_ITEM_CAPACITY
     }
 }
 
@@ -3840,7 +3840,7 @@ static void DebugAction_PCBag_Fill_PocketBerries(u8 taskId)
     {
         itemId = BerryTypeToItemId(berryId);
         if (CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
-            AddBagItem(itemId, MAX_BAG_ITEM_CAPACITY);
+            AddBagItem(itemId, berryId); //MAX_BAG_ITEM_CAPACITY
     }
 }
 

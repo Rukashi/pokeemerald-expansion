@@ -294,7 +294,7 @@ static const u16 sPrizeList[] = {
     ITEM_SCOPE_LENS,
     ITEM_METAL_COAT,
     ITEM_DRAGON_SCALE,
-    ITEM_UP_GRADE
+    ITEM_UPGRADE
 };
 
 static const u16 sTrainerTowerEncounterMusic[] = {

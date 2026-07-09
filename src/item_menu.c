@@ -105,7 +105,7 @@ enum {
 };
 
 // Item list ID for toSwapPos to indicate an item is not currently being swapped
-#define NOT_SWAPPING 0xFF
+#define NOT_SWAPPING 0xFFFF
 
 struct ListBuffer1 {
     struct ListMenuItem subBuffers[MAX_POCKET_ITEMS];
@@ -993,7 +993,7 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
         if (gBagMenu->toSwapPos != NOT_SWAPPING)
         {
             // Swapping items, draw cursor at original item's location
-            if (gBagMenu->toSwapPos == (u8)itemIndex)
+            if (gBagMenu->toSwapPos == (u16)itemIndex)
                 BagMenu_PrintCursorAtPos(y, COLORID_GRAY_CURSOR);
             else
                 BagMenu_PrintCursorAtPos(y, COLORID_NONE);
@@ -1174,7 +1174,7 @@ void UpdatePocketItemList(enum Pocket pocketId)
     if (gBagMenu->numItemStacks[pocketId] > MAX_ITEMS_SHOWN)
         gBagMenu->numShownItems[pocketId] = MAX_ITEMS_SHOWN;
     else
-        gBagMenu->numShownItems[pocketId] = gBagMenu->numItemStacks[pocketId];
+        gBagMenu->numShownItems[pocketId] = (u8)gBagMenu->numItemStacks[pocketId];
 }
 
 static void UpdatePocketItemLists(void)
