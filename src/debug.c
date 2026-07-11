@@ -71,7 +71,7 @@
 #include "rtc.h"
 #include "fake_rtc.h"
 #include "save.h"
-#include "vs_seeker.h"
+// #include "vs_seeker.h"
 #include "load_save.h"
 #include "battle_partner.h"
 
@@ -1828,11 +1828,11 @@ static void ParseObjectEventScript(const u8 *script)
     {
         TrainerBattleLoadArgs(script + 1);
     }
-    else if (Script_MatchesCallNative(script, NativeVsSeekerRematchId, TRUE))
-    {
-        ctx->scriptPtr = script + 5;
-        sDebugMenuListData->data[0] = ScriptPeekHalfword(ctx);
-    }
+    // else if (Script_MatchesCallNative(script, NativeVsSeekerRematchId, TRUE))
+    // {
+        // ctx->scriptPtr = script + 5;
+        // sDebugMenuListData->data[0] = ScriptPeekHalfword(ctx);
+    // }
     else if (Script_MatchesSpecial(script, SavePlayerParty) && Script_MatchesCallNative(script + 3, SetMultiTrainerBattle, FALSE))
     {
         ctx->scriptPtr = script + 8;
@@ -2175,9 +2175,9 @@ static void DebugAction_Trainers_TryBattle(u8 taskId)
 
 static void DebugAction_Trainers_RechargeVsSeeker(u8 taskId)
 {
-    SetTrainerRematchStepCounter(VSSEEKER_RECHARGE_STEPS);
-    MapResetTrainerRematches(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
-    ScriptContext_SetupScript(EventScript_VsSeekerChargingDone);
+    // SetTrainerRematchStepCounter(VSSEEKER_RECHARGE_STEPS);
+    // MapResetTrainerRematches(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
+    // ScriptContext_SetupScript(EventScript_VsSeekerChargingDone);
     Debug_DestroyMenu_Full(taskId);
 }
 
@@ -3807,7 +3807,7 @@ static void DebugAction_PCBag_Fill_PocketItems(u8 taskId)
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
         if (GetItemPocket(itemId) == POCKET_ITEMS && CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
-            AddBagItem(itemId, itemId - 27); //MAX_BAG_ITEM_CAPACITY
+            AddBagItem(itemId, itemId - ITEM_POTION + 1); //MAX_BAG_ITEM_CAPACITY
     }
 }
 

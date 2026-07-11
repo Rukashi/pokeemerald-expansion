@@ -5007,16 +5007,17 @@ bool32 AI_CanContactBypassProtect(enum BattlerId battlerAtk, enum BattlerId batt
 
 bool32 IsConsideringZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
-    if (GetMovePower(move) == 0 && GetMoveZEffect(move) == Z_EFFECT_NONE)
+    /* if (GetMovePower(move) == 0 && GetMoveZEffect(move) == Z_EFFECT_NONE)
         return FALSE;
 
-    return gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move);
+   return gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move); */
+   return FALSE;
 }
 
 //TODO - this could use some more sophisticated logic
 bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move chosenMove)
 {
-    // simple logic. just upgrades chosen move to z move if possible, unless regular move would kill opponent
+    /* // simple logic. just upgrades chosen move to z move if possible, unless regular move would kill opponent
     enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAtk, chosenMove);
     if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk) && target != TARGET_ALLY && target != TARGET_USER_OR_ALLY)
         return FALSE;   // don't use z move on partner
@@ -5191,7 +5192,7 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
         }
 
         return TRUE;
-    }
+    } */
 
     return FALSE;
 }

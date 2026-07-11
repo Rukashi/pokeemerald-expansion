@@ -16,9 +16,9 @@
 #include "constants/abilities.h"
 #include "constants/rgb.h"
 
-// Sets flags and variables upon a battler's Terastallization.
-void ActivateTera(enum BattlerId battler)
-{
+/* void ActivateTera(enum BattlerId battler) {
+	// Sets flags and variables upon a battler's Terastallization.
+	
     // Set appropriate flags.
     SetActiveGimmick(battler, GIMMICK_TERA);
     SetGimmickAsActivated(battler, GIMMICK_TERA);
@@ -41,11 +41,11 @@ void ActivateTera(enum BattlerId battler)
         BattleScriptPushCursorAndCallback(BattleScript_IllusionOffAndTerastallization);
     else
         BattleScriptPushCursorAndCallback(BattleScript_Terastallization);
-}
+} */
 
-// Applies palette blend and enables UI indicator after animation has played
-void ApplyBattlerVisualsForTeraAnim(enum BattlerId battler)
-{
+/* void ApplyBattlerVisualsForTeraAnim(enum BattlerId battler) {
+	// Applies palette blend and enables UI indicator after animation has played
+	
     struct Pokemon *party = GetBattlerParty(battler);
     u32 index = gBattlerPartyIndexes[battler];
 
@@ -56,12 +56,12 @@ void ApplyBattlerVisualsForTeraAnim(enum BattlerId battler)
 
     // We apply the animation behind a white screen, so restore the blended color here to avoid a pop
     BlendPalette(OBJ_PLTT_ID(battler), 16, 16, RGB_WHITEALPHA);
-}
+} */
 
-// Returns whether a battler can Terastallize.
-bool32 CanTerastallize(enum BattlerId battler)
-{
-    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
+bool32 CanTerastallize(enum BattlerId battler) {
+	// Returns whether a battler can Terastallize.
+	
+    /* enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     if (gBattleMons[battler].volatiles.transformed && GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
         return FALSE;
@@ -104,35 +104,37 @@ bool32 CanTerastallize(enum BattlerId battler)
         return FALSE;
 
     // Every check passed!
-    return TRUE;
+    return TRUE; */
+    return FALSE;
 }
 
-// Returns a battler's Tera type.
-enum Type GetBattlerTeraType(enum BattlerId battler)
-{
+enum Type GetBattlerTeraType(enum BattlerId battler) {
+	// Returns a battler's Tera type.
+	
     return GetMonData(GetBattlerMon(battler), MON_DATA_TERA_TYPE);
 }
 
-// Uses up a type's Stellar boost.
-void ExpendTypeStellarBoost(enum BattlerId battler, enum Type type)
-{
+void ExpendTypeStellarBoost(enum BattlerId battler, enum Type type) {
+	// Uses up a type's Stellar boost.
+	
     if (type < 32 && gBattleMons[battler].species != SPECIES_TERAPAGOS_STELLAR) // avoid OOB access
         gBattleStruct->stellarBoostFlags[GetBattlerTrainer(battler)] |= 1u << type;
 }
 
-// Checks whether a type's Stellar boost has been expended.
-bool32 IsTypeStellarBoosted(enum BattlerId battler, enum Type type)
-{
-    if (type < 32) // avoid OOB access
+bool32 IsTypeStellarBoosted(enum BattlerId battler, enum Type type) {
+	// Checks whether a type's Stellar boost has been expended.
+	
+    /* if (type < 32) // avoid OOB access
         return !(gBattleStruct->stellarBoostFlags[GetBattlerTrainer(battler)] & (1u << type));
     else
-        return FALSE;
+        return FALSE; */
+    return FALSE;
 }
 
-// Returns the STAB power multiplier to use when Terastallized.
-// Power multipliers from Smogon Research thread.
-uq4_12_t GetTeraMultiplier(struct DamageContext *ctx)
-{
+/* uq4_12_t GetTeraMultiplier(struct DamageContext *ctx) {
+	// Returns the STAB power multiplier to use when Terastallized.
+	// Power multipliers from Smogon Research thread.
+	
     enum Type teraType = GetBattlerTeraType(ctx->battlerAtk);
 
     // Safety check.
@@ -181,9 +183,8 @@ uq4_12_t GetTeraMultiplier(struct DamageContext *ctx)
     {
         return UQ_4_12(1.0);
     }
-}
+} */
 
-u16 GetTeraTypeRGB(enum Type type)
-{
+u16 GetTeraTypeRGB(enum Type type) {
     return gTypesInfo[type].teraTypeRGBValue;
 }

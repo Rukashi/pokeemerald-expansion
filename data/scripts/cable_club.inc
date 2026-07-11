@@ -937,7 +937,7 @@ CableClub_EventScript_DirectCornerAttendant::
 	end
 
 CableClub_EventScript_DirectCornerSelectService::
-	checkitem ITEM_POWDER_JAR
+	//checkitem ITEM_POWDER_JAR
 	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_DirectCornerNoBerry
 	goto_if_set FLAG_VISITED_MAUVILLE_CITY, CableClub_EventScript_DirectCornerSelectAllServices
 	multichoice 0, 0, MULTI_WIRELESS_NO_RECORD, FALSE

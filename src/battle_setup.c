@@ -41,7 +41,7 @@
 #include "mirage_tower.h"
 #include "field_screen_effect.h"
 #include "data.h"
-#include "vs_seeker.h"
+// #include "vs_seeker.h"
 #include "item.h"
 #include "script.h"
 #include "field_name_box.h"
@@ -315,7 +315,7 @@ static void CreateBattleStartTask_Debug(u8 transition, u16 song)
 
 static bool8 CheckSilphScopeInPokemonTower(u16 mapGroup, u16 mapNum)
 {
-    if (mapGroup == MAP_GROUP(MAP_POKEMON_TOWER_1F)
+    /* if (mapGroup == MAP_GROUP(MAP_POKEMON_TOWER_1F)
      && (mapNum == MAP_NUM(MAP_POKEMON_TOWER_1F)
       || mapNum == MAP_NUM(MAP_POKEMON_TOWER_2F)
       || mapNum == MAP_NUM(MAP_POKEMON_TOWER_3F)
@@ -325,7 +325,7 @@ static bool8 CheckSilphScopeInPokemonTower(u16 mapGroup, u16 mapNum)
       || mapNum == MAP_NUM(MAP_POKEMON_TOWER_7F))
      && !(CheckBagHasItem(ITEM_SILPH_SCOPE, 1)))
         return TRUE;
-    else
+    else */
         return FALSE;
 }
 
@@ -513,12 +513,12 @@ void StartMarowakBattle(void)
     gMain.savedCallback = CB2_EndMarowakBattle;
     gBattleTypeFlags = BATTLE_TYPE_GHOST;
 
-    if (CheckBagHasItem(ITEM_SILPH_SCOPE, 1))
-    {
-        u32 personality = GetMonPersonality(SPECIES_MAROWAK, MON_FEMALE, NATURE_SERIOUS, RANDOM_UNOWN_LETTER);
+    // if (CheckBagHasItem(ITEM_SILPH_SCOPE, 1))
+    // {
+        // u32 personality = GetMonPersonality(SPECIES_MAROWAK, MON_FEMALE, NATURE_SERIOUS, RANDOM_UNOWN_LETTER);
 
-        CreateMonWithIVsPersonality(&gParties[B_TRAINER_OPPONENT_A][0], SPECIES_MAROWAK, 30, 31, personality);
-    }
+        // CreateMonWithIVsPersonality(&gParties[B_TRAINER_OPPONENT_A][0], SPECIES_MAROWAK, 30, 31, personality);
+    // }
 
     CreateBattleStartTask(GetWildBattleTransition(), 0);
     SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_NICKNAME, gText_Ghost);
@@ -2077,8 +2077,8 @@ bool8 IsTrainerReadyForRematch(void)
 
 static void HandleRematchVarsOnBattleEnd(void)
 {
-    if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER) && (I_VS_SEEKER_CHARGING != 0))
-        ClearRematchMovementByTrainerId();
+    // if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER) && (I_VS_SEEKER_CHARGING != 0))
+        // ClearRematchMovementByTrainerId();
 
     ClearTrainerWantRematchState(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
     SetBattledTrainersFlags();

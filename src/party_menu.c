@@ -4828,12 +4828,12 @@ static bool32 NotUsingHPEVItemOnShedinja(struct Pokemon *mon, enum Item item)
     return TRUE;
 }
 
-static bool32 IsItemFlute(enum Item item)
-{
-    if (item == ITEM_BLUE_FLUTE || item == ITEM_RED_FLUTE || item == ITEM_YELLOW_FLUTE)
-        return TRUE;
-    return FALSE;
-}
+// static bool32 IsItemFlute(enum Item item)
+// {
+    // if (item == ITEM_BLUE_FLUTE || item == ITEM_RED_FLUTE || item == ITEM_YELLOW_FLUTE)
+        // return TRUE;
+    // return FALSE;
+// }
 
 // Battle scripts called in HandleAction_UseItem
 void ItemUseCB_BattleScript(u8 taskId, TaskFunc task)
@@ -4852,7 +4852,7 @@ void ItemUseCB_BattleScript(u8 taskId, TaskFunc task)
         gBattleStruct->itemPartyIndex[gBattlerInMenuId] = GetPartyIdFromBattleSlot(gPartyMenu.slotId);
         gPartyMenuUseExitCallback = TRUE;
         PlaySE(SE_SELECT);
-        if (!IsItemFlute(gSpecialVar_ItemId))
+        // if (!IsItemFlute(gSpecialVar_ItemId))
             RemoveBagItem(gSpecialVar_ItemId, 1);
         ScheduleBgCopyTilemapToVram(2);
         gTasks[taskId].func = task;
@@ -4909,15 +4909,15 @@ void ItemUseCB_Medicine(u8 taskId, TaskFunc task)
     else
     {
         gPartyMenuUseExitCallback = TRUE;
-        if (!IsItemFlute(item))
-        {
+        // if (!IsItemFlute(item))
+        // {
             PlaySE(SE_USE_ITEM);
             RemoveBagItem(item, 1);
-        }
-        else
-        {
-            PlaySE(SE_GLASS_FLUTE);
-        }
+        // }
+        // else
+        // {
+            // PlaySE(SE_GLASS_FLUTE);
+        // }
         SetPartyMonAilmentGfx(mon, &sPartyMenuBoxes[gPartyMenu.slotId]);
         if (gSprites[sPartyMenuBoxes[gPartyMenu.slotId].statusSpriteId].invisible)
             DisplayPartyPokemonLevelCheck(mon, &sPartyMenuBoxes[gPartyMenu.slotId], 1);

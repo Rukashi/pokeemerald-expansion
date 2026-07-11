@@ -1109,18 +1109,18 @@ void Task_FadeAndCloseBagMenu(u8 taskId)
 
 static void Task_FadeAndCloseBagMenuIfMulch(u8 taskId)
 {
-    if (gSpecialVar_ItemId == ITEM_GROWTH_MULCH ||
-        gSpecialVar_ItemId == ITEM_DAMP_MULCH ||
-        gSpecialVar_ItemId == ITEM_STABLE_MULCH ||
-        gSpecialVar_ItemId == ITEM_GOOEY_MULCH ||
-        gSpecialVar_ItemId == ITEM_RICH_MULCH ||
-        gSpecialVar_ItemId == ITEM_SURPRISE_MULCH ||
-        gSpecialVar_ItemId == ITEM_BOOST_MULCH ||
-        gSpecialVar_ItemId == ITEM_AMAZE_MULCH)
-    {
-        Task_FadeAndCloseBagMenu(taskId);
-        return;
-    }
+    // if (gSpecialVar_ItemId == ITEM_GROWTH_MULCH ||
+        // gSpecialVar_ItemId == ITEM_DAMP_MULCH ||
+        // gSpecialVar_ItemId == ITEM_STABLE_MULCH ||
+        // gSpecialVar_ItemId == ITEM_GOOEY_MULCH ||
+        // gSpecialVar_ItemId == ITEM_RICH_MULCH ||
+        // gSpecialVar_ItemId == ITEM_SURPRISE_MULCH ||
+        // gSpecialVar_ItemId == ITEM_BOOST_MULCH ||
+        // gSpecialVar_ItemId == ITEM_AMAZE_MULCH)
+    // {
+        // Task_FadeAndCloseBagMenu(taskId);
+        // return;
+    // }
     DisplayDadsAdviceCannotUseItemMessage(taskId, FALSE);
 }
 
@@ -1697,7 +1697,7 @@ static void OpenContextMenu(u8 taskId)
                 memcpy(&gBagMenu->contextMenuItemsBuffer, &sContextMenuItems_KeyItemsPocket, sizeof(sContextMenuItems_KeyItemsPocket));
                 if (gSaveBlock1Ptr->registeredItem == gSpecialVar_ItemId)
                     gBagMenu->contextMenuItemsBuffer[1] = ACTION_DESELECT;
-                if (gSpecialVar_ItemId == ITEM_MACH_BIKE || gSpecialVar_ItemId == ITEM_ACRO_BIKE || gSpecialVar_ItemId == ITEM_BICYCLE)
+                if (gSpecialVar_ItemId == ITEM_MACH_BIKE || gSpecialVar_ItemId == ITEM_ACRO_BIKE) //|| gSpecialVar_ItemId == ITEM_BICYCLE)
                 {
                     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
                         gBagMenu->contextMenuItemsBuffer[0] = ACTION_WALK;

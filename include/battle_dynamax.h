@@ -6,14 +6,14 @@
 bool32 CanDynamax(enum BattlerId battler);
 bool32 IsGigantamaxed(enum BattlerId battler);
 void ApplyDynamaxHPMultiplier(struct Pokemon *mon);
-void ActivateDynamax(enum BattlerId battler);
+// void ActivateDynamax(enum BattlerId battler);
 u32 GetNonDynamaxHP(enum BattlerId battler);
 u32 GetNonDynamaxMaxHP(enum BattlerId battler);
-void UndoDynamax(enum BattlerId battler);
+// void UndoDynamax(enum BattlerId battler);
 bool32 IsMoveBlockedByMaxGuard(enum Move move);
 
-enum Move GetMaxMove(enum BattlerId battler, enum Move baseMove);
-u32 GetMaxMovePower(enum Move move);
+// enum Move GetMaxMove(enum BattlerId battler, enum Move baseMove);
+// u32 GetMaxMovePower(enum Move move);
 bool32 IsMaxMove(enum Move move);
 void ChooseDamageNonTypesString(enum Type type);
 

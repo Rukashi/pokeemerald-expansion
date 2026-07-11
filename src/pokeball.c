@@ -356,17 +356,17 @@ const struct PokeBallSprite gPokeBalls[POKEBALL_COUNT] =
         .itemId = ITEM_SAFARI_BALL,
     },
 
-    [BALL_SPORT]   =
-    {
-        POKE_BALL_SPRITE(GFX_TAG_SPORT_BALL, gBallGfx_Sport, gBallPal_Sport),
-        .itemId = ITEM_SPORT_BALL,
-    },
+    // [BALL_SPORT]   =
+    // {
+        // POKE_BALL_SPRITE(GFX_TAG_SPORT_BALL, gBallGfx_Sport, gBallPal_Sport),
+        // .itemId = ITEM_SPORT_BALL,
+    // },
 
-    [BALL_PARK]    =
-    {
-        POKE_BALL_SPRITE(GFX_TAG_PARK_BALL, gBallGfx_Park, gBallPal_Park),
-        .itemId = ITEM_PARK_BALL,
-    },
+    // [BALL_PARK]    =
+    // {
+        // POKE_BALL_SPRITE(GFX_TAG_PARK_BALL, gBallGfx_Park, gBallPal_Park),
+        // .itemId = ITEM_PARK_BALL,
+    // },
 
     [BALL_BEAST]   =
     {

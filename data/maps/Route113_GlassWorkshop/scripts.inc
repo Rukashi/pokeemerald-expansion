@@ -27,7 +27,7 @@ Route113_GlassWorkshop_EventScript_GlassWorker::
 	goto_if_eq VAR_GLASS_WORKSHOP_STATE, 2, Route113_GlassWorkshop_EventScript_CheckCollectedAsh
 	goto_if_eq VAR_GLASS_WORKSHOP_STATE, 1, Route113_GlassWorkshop_EventScript_ExplainSootSack
 	msgbox Route113_GlassWorkshop_Text_GoCollectAshWithThis, MSGBOX_DEFAULT
-	giveitem ITEM_SOOT_SACK
+	//giveitem ITEM_SOOT_SACK
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	setvar VAR_GLASS_WORKSHOP_STATE, 1
 	msgbox Route113_GlassWorkshop_Text_ExplainSootSack, MSGBOX_DEFAULT
@@ -40,7 +40,7 @@ Route113_GlassWorkshop_EventScript_ExplainSootSack::
 	end
 
 Route113_GlassWorkshop_EventScript_CheckCollectedAsh::
-	checkitem ITEM_SOOT_SACK
+	//checkitem ITEM_SOOT_SACK
 	goto_if_eq VAR_RESULT, FALSE, Route113_GlassWorkshop_EventScript_SootSackNotInBag
 	msgbox Route113_GlassWorkshop_Text_LetsSeeCollectedAshes, MSGBOX_DEFAULT
 	goto_if_lt VAR_ASH_GATHER_COUNT, LOWEST_ASH_PRICE, Route113_GlassWorkshop_EventScript_NotEnoughAsh
@@ -71,7 +71,7 @@ Route113_GlassWorkshop_EventScript_ChooseGlassItem::
 	end
 
 Route113_GlassWorkshop_EventScript_BlueFlute::
-	setvar VAR_0x8008, ITEM_BLUE_FLUTE
+	//setvar VAR_0x8008, ITEM_BLUE_FLUTE
 	bufferitemname STR_VAR_1, VAR_0x8008
 	setvar VAR_0x800A, BLUE_FLUTE_PRICE
 	goto_if_lt VAR_ASH_GATHER_COUNT, BLUE_FLUTE_PRICE, Route113_GlassWorkshop_EventScript_NotEnoughAshForItem
@@ -83,7 +83,7 @@ Route113_GlassWorkshop_EventScript_BlueFlute::
 	end
 
 Route113_GlassWorkshop_EventScript_YellowFlute::
-	setvar VAR_0x8008, ITEM_YELLOW_FLUTE
+	//setvar VAR_0x8008, ITEM_YELLOW_FLUTE
 	bufferitemname STR_VAR_1, VAR_0x8008
 	setvar VAR_0x800A, YELLOW_FLUTE_PRICE
 	goto_if_lt VAR_ASH_GATHER_COUNT, YELLOW_FLUTE_PRICE, Route113_GlassWorkshop_EventScript_NotEnoughAshForItem
@@ -95,7 +95,7 @@ Route113_GlassWorkshop_EventScript_YellowFlute::
 	end
 
 Route113_GlassWorkshop_EventScript_RedFlute::
-	setvar VAR_0x8008, ITEM_RED_FLUTE
+	//setvar VAR_0x8008, ITEM_RED_FLUTE
 	bufferitemname STR_VAR_1, VAR_0x8008
 	setvar VAR_0x800A, RED_FLUTE_PRICE
 	goto_if_lt VAR_ASH_GATHER_COUNT, RED_FLUTE_PRICE, Route113_GlassWorkshop_EventScript_NotEnoughAshForItem
@@ -107,7 +107,7 @@ Route113_GlassWorkshop_EventScript_RedFlute::
 	end
 
 Route113_GlassWorkshop_EventScript_WhiteFlute::
-	setvar VAR_0x8008, ITEM_WHITE_FLUTE
+	//setvar VAR_0x8008, ITEM_WHITE_FLUTE
 	bufferitemname STR_VAR_1, VAR_0x8008
 	setvar VAR_0x800A, WHITE_FLUTE_PRICE
 	goto_if_lt VAR_ASH_GATHER_COUNT, WHITE_FLUTE_PRICE, Route113_GlassWorkshop_EventScript_NotEnoughAshForItem
@@ -119,7 +119,7 @@ Route113_GlassWorkshop_EventScript_WhiteFlute::
 	end
 
 Route113_GlassWorkshop_EventScript_BlackFlute::
-	setvar VAR_0x8008, ITEM_BLACK_FLUTE
+	//setvar VAR_0x8008, ITEM_BLACK_FLUTE
 	bufferitemname STR_VAR_1, VAR_0x8008
 	setvar VAR_0x800A, BLACK_FLUTE_PRICE
 	goto_if_lt VAR_ASH_GATHER_COUNT, BLACK_FLUTE_PRICE, Route113_GlassWorkshop_EventScript_NotEnoughAshForItem
@@ -232,35 +232,35 @@ Route113_GlassWorkshop_EventScript_GiveItemAfterNoRoom::
 
 Route113_GlassWorkshop_EventScript_GiveBlueFlute::
 	setvar VAR_0x8009, 0
-	setvar VAR_0x8008, ITEM_BLUE_FLUTE
+	//setvar VAR_0x8008, ITEM_BLUE_FLUTE
 	bufferitemname STR_VAR_1, VAR_0x8008
 	goto Route113_GlassWorkshop_EventScript_TryGiveItemAgain
 	end
 
 Route113_GlassWorkshop_EventScript_GiveYellowFlute::
 	setvar VAR_0x8009, 0
-	setvar VAR_0x8008, ITEM_YELLOW_FLUTE
+	//setvar VAR_0x8008, ITEM_YELLOW_FLUTE
 	bufferitemname STR_VAR_1, VAR_0x8008
 	goto Route113_GlassWorkshop_EventScript_TryGiveItemAgain
 	end
 
 Route113_GlassWorkshop_EventScript_GiveRedFlute::
 	setvar VAR_0x8009, 0
-	setvar VAR_0x8008, ITEM_RED_FLUTE
+	//setvar VAR_0x8008, ITEM_RED_FLUTE
 	bufferitemname STR_VAR_1, VAR_0x8008
 	goto Route113_GlassWorkshop_EventScript_TryGiveItemAgain
 	end
 
 Route113_GlassWorkshop_EventScript_GiveWhiteFlute::
 	setvar VAR_0x8009, 0
-	setvar VAR_0x8008, ITEM_WHITE_FLUTE
+	//setvar VAR_0x8008, ITEM_WHITE_FLUTE
 	bufferitemname STR_VAR_1, VAR_0x8008
 	goto Route113_GlassWorkshop_EventScript_TryGiveItemAgain
 	end
 
 Route113_GlassWorkshop_EventScript_GiveBlackFlute::
 	setvar VAR_0x8009, 0
-	setvar VAR_0x8008, ITEM_BLACK_FLUTE
+	//setvar VAR_0x8008, ITEM_BLACK_FLUTE
 	bufferitemname STR_VAR_1, VAR_0x8008
 	goto Route113_GlassWorkshop_EventScript_TryGiveItemAgain
 	end

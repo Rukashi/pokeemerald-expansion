@@ -3,7 +3,6 @@
 #include "config/item.h"
 #include "constants/global.h"
 #include "constants/apprentice.h"
-#include "constants/apricorn_tree.h"
 #include "constants/battle.h"
 #include "constants/battle_arena.h"
 #include "constants/battle_dome.h"
@@ -1621,9 +1620,9 @@ Common_EventScript_LegendaryFlewAway::
 	end
 
 EventScript_VsSeekerChargingDone::
-	special VsSeekerFreezeObjectsAfterChargeComplete
+	@special VsSeekerFreezeObjectsAfterChargeComplete
 	waitstate
-	special VsSeekerResetObjectMovementAfterChargeComplete
+	@special VsSeekerResetObjectMovementAfterChargeComplete
 	releaseall
 	end
 
@@ -1735,5 +1734,4 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/text/birch_speech.inc"
 	.include "data/scripts/dexnav.inc"
 	.include "data/scripts/battle_frontier.inc"
-	.include "data/scripts/apricorn_tree.inc"
 	.include "data/scripts/wild_encounter.inc"

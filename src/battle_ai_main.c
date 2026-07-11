@@ -2782,7 +2782,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             if (instructedMove == MOVE_NONE
              || IsMoveInstructBanned(instructedMove)
              || MoveHasAdditionalEffectSelf(instructedMove, MOVE_EFFECT_RECHARGE)
-             || IsZMove(instructedMove)
+             // || IsZMove(instructedMove)
              || (gLockedMoves[battlerDef] != MOVE_NONE && gLockedMoves[battlerDef] != MOVE_UNAVAILABLE)
              || gBattleMons[battlerDef].volatiles.multipleTurns
              || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))

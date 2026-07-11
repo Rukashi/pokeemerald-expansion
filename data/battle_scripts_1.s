@@ -5680,7 +5680,7 @@ BattleScript_ZMoveActivateStatus::
 	trytrainerslidezmovemsg
 	printstring STRINGID_ZPOWERSURROUNDS
 	playanimation BS_ATTACKER, B_ANIM_ZMOVE_ACTIVATE, NULL
-	setzeffect
+	@setzeffect
 	return
 
 BattleScript_ZEffectPrintString::

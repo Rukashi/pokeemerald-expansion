@@ -886,7 +886,8 @@ static const struct PickupItem sPickupTable[] =
     { ITEM_TINY_MUSHROOM,   {  25,  10,   _,   _,   _,   _,   _,   _,   _,   _, } },
     { ITEM_REPEL,           {   8,  30,   _,   _,   _,   _,   _,   _,   _,   _, } },
     { ITEM_SUPER_POTION,    {   8,  10,  30,   _,   _,   _,   _,   _,   _,   _, } },
-    { ITEM_POKE_DOLL,       {   8,  10,   9,  30,   _,   _,   _,   _,   _,   _, } },
+    // { ITEM_POKE_DOLL,       {   8,  10,   9,  30,   _,   _,   _,   _,   _,   _, } },
+    { ITEM_FLUFFY_TAIL,     {   8,  10,   9,  30,   _,   _,   _,   _,   _,   _, } },
     { ITEM_BIG_MUSHROOM,    {   3,  10,   9,   _,   _,   _,   _,   _,   _,   _, } },
     { ITEM_SUPER_REPEL,     {   3,  10,   9,   9,  30,   _,   _,   _,   _,   _, } },
     { ITEM_FULL_HEAL,       {   3,   3,   9,   8,   9,  30,   _,   _,   _,   _, } },
@@ -1061,8 +1062,8 @@ static void Cmd_accuracycheck(void)
 
     if ((GetMovePower(gCurrentMove) > 0) // Only used for non damage moves (damaging moves are handled in move resolution)
      || ShouldSkipFRLGAccuracyCheck()
-     || IsMaxMove(gCurrentMove)
-     || IsZMove(gCurrentMove))
+     || IsMaxMove(gCurrentMove))
+     // || IsZMove(gCurrentMove))
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
@@ -11115,11 +11116,11 @@ void BS_TrySymbiosis(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_SetZEffect(void)
-{
-    NATIVE_ARGS();
-    SetZEffect(cmd->nextInstr); // Handles battle script jumping internally
-}
+// void BS_SetZEffect(void)
+// {
+    // NATIVE_ARGS();
+    // SetZEffect(cmd->nextInstr); // Handles battle script jumping internally
+// }
 
 static void TryUpdateRoundTurnOrder(void)
 {
@@ -11832,7 +11833,7 @@ void BS_RemoveWeather(void)
 void BS_ApplyTerastallization(void)
 {
     NATIVE_ARGS();
-    ApplyBattlerVisualsForTeraAnim(gBattlerAttacker);
+    // ApplyBattlerVisualsForTeraAnim(gBattlerAttacker);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -13180,7 +13181,7 @@ void BS_TryInstruct(void)
         || gBattleMons[gBattlerTarget].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET
         || gBattleMoveEffects[GetMoveEffect(move)].twoTurnEffect
         || (GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX)
-        || IsZMove(move)
+        // || IsZMove(move)
         || IsMaxMove(move))
     {
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -13838,7 +13839,7 @@ void BS_UndoDynamax(void)
 
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX)
     {
-        UndoDynamax(battler);
+        // UndoDynamax(battler);
         gBattleScripting.battler = battler;
         BattleScriptCall(BattleScript_DynamaxEnds_Ret);
         return;

@@ -2473,7 +2473,8 @@ bool32 BerryTreeGrow(struct BerryTree *tree)
         tree->berryYield = 0;
         tree->stage = BERRY_STAGE_SPROUTED;
         tree->moistureLevel = 100;
-        if (++tree->regrowthCount == ((tree->mulch == ITEM_TO_MULCH(ITEM_GOOEY_MULCH)) ? 15 : 10))
+        // if (++tree->regrowthCount == ((tree->mulch == ITEM_TO_MULCH(ITEM_GOOEY_MULCH)) ? 15 : 10))
+        if (++tree->regrowthCount == 10)
             *tree = gBlankBerryTree;
         break;
     }
@@ -2482,12 +2483,12 @@ bool32 BerryTreeGrow(struct BerryTree *tree)
 
 static u16 GetMulchAffectedGrowthRate(u16 berryDuration, u8 mulch, u8 stage)
 {
-    if (stage == BERRY_STAGE_BERRIES)
-        return berryDuration;
-    if (mulch == ITEM_TO_MULCH(ITEM_GROWTH_MULCH))
-        return berryDuration / 4 * 3;
-    if (mulch == ITEM_TO_MULCH(ITEM_DAMP_MULCH))
-        return berryDuration / 2 * 3;
+    // if (stage == BERRY_STAGE_BERRIES)
+        // return berryDuration;
+    // if (mulch == ITEM_TO_MULCH(ITEM_GROWTH_MULCH))
+        // return berryDuration / 4 * 3;
+    // if (mulch == ITEM_TO_MULCH(ITEM_DAMP_MULCH))
+        // return berryDuration / 2 * 3;
     return berryDuration;
 }
 
@@ -2521,15 +2522,15 @@ void BerryTreeTimeUpdate(s32 minutes)
                         if (OW_BERRY_MOISTURE)
                         {
                             drainVal = (OW_BERRY_DRAIN_RATE == GEN_4) ? GetDrainRateByBerryType(tree->berry) : (OW_BERRY_DRAIN_RATE == GEN_6_XY) ? 4 : 25;
-                            if (OW_BERRY_MULCH_USAGE)
-                            {
-                                if (tree->mulch == ITEM_TO_MULCH(ITEM_GROWTH_MULCH))
-                                    drainVal *= 2;
-                                if (tree->mulch == ITEM_TO_MULCH(ITEM_DAMP_MULCH))
-                                    drainVal /= 2;
-                                if (tree->mulch == ITEM_TO_MULCH(ITEM_BOOST_MULCH) || tree->mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH))
-                                    drainVal = 25;
-                            }
+                            // if (OW_BERRY_MULCH_USAGE)
+                            // {
+                                // if (tree->mulch == ITEM_TO_MULCH(ITEM_GROWTH_MULCH))
+                                    // drainVal *= 2;
+                                // if (tree->mulch == ITEM_TO_MULCH(ITEM_DAMP_MULCH))
+                                    // drainVal /= 2;
+                                // if (tree->mulch == ITEM_TO_MULCH(ITEM_BOOST_MULCH) || tree->mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH))
+                                    // drainVal = 25;
+                            // }
                             if (OW_BERRY_ALWAYS_WATERABLE && tree->moistureLevel == 0)
                             {
                                 if (tree->berryYield > GetBerryInfo(tree->berry)->minYield + GetBerryInfo(tree->berry)->maxYield / 5)
@@ -2568,7 +2569,8 @@ void BerryTreeTimeUpdate(s32 minutes)
                     if (!BerryTreeGrow(tree))
                         break;
                     if (tree->stage == BERRY_STAGE_BERRIES)
-                        tree->minutesUntilNextStage = GetStageDurationByBerryType(tree->berry) * ((tree->mulch == ITEM_TO_MULCH(ITEM_STABLE_MULCH)) ? 6 : 4);
+                        // tree->minutesUntilNextStage = GetStageDurationByBerryType(tree->berry) * ((tree->mulch == ITEM_TO_MULCH(ITEM_STABLE_MULCH)) ? 6 : 4);
+                        tree->minutesUntilNextStage = GetStageDurationByBerryType(tree->berry) * 4;
                 }
             }
         }
@@ -2595,7 +2597,8 @@ void PlantBerryTree(u8 id, enum BerryId berry, u8 stage, bool8 allowGrowth)
     else if (stage == BERRY_STAGE_BERRIES)
     {
         tree->berryYield = CalcBerryYield(tree);
-        tree->minutesUntilNextStage *= ((tree->mulch == ITEM_TO_MULCH(ITEM_STABLE_MULCH)) ? 6 : 4);
+        // tree->minutesUntilNextStage *= ((tree->mulch == ITEM_TO_MULCH(ITEM_STABLE_MULCH)) ? 6 : 4);
+        tree->minutesUntilNextStage *= 4;
     }
 
     // Stop growth, to keep tree at this stage until the player has seen it
@@ -2692,8 +2695,8 @@ static u8 CalcBerryYield(struct BerryTree *tree)
     u8 min = tree->berryYield;
     u8 max = berryInfo->maxYield;
     u8 result;
-    if (OW_BERRY_MULCH_USAGE && (tree->mulch == ITEM_TO_MULCH(ITEM_RICH_MULCH) || tree->mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH)))
-        min += 2;
+    // if (OW_BERRY_MULCH_USAGE && (tree->mulch == ITEM_TO_MULCH(ITEM_RICH_MULCH) || tree->mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH)))
+        // min += 2;
     if (!(OW_BERRY_MOISTURE && OW_BERRY_ALWAYS_WATERABLE))
         min += berryInfo->minYield;
     if (min >= max)
@@ -2825,9 +2828,9 @@ void ObjectEventInteractionPlantBerryTree(void)
 
 void ObjectEventInteractionApplyMulch(void)
 {
-    u8 mulch = ITEM_TO_MULCH(gSpecialVar_ItemId);
+    // u8 mulch = ITEM_TO_MULCH(gSpecialVar_ItemId);
 
-    gSaveBlock1Ptr->berryTrees[GetObjectEventBerryTreeId(gSelectedObjectEvent)].mulch = mulch;
+    // gSaveBlock1Ptr->berryTrees[GetObjectEventBerryTreeId(gSelectedObjectEvent)].mulch = mulch;
     StringExpandPlaceholders(gStringVar1, gItemsInfo[gSpecialVar_ItemId].name);
 }
 
@@ -2924,24 +2927,24 @@ void SetBerryTreesSeen(void)
 
 bool8 PlayerHasMulch(void)
 {
-    if (!OW_BERRY_MULCH_USAGE)
-        return FALSE;
-    if (CheckBagHasItem(ITEM_GROWTH_MULCH, 1))
-        return TRUE;
-    if (CheckBagHasItem(ITEM_DAMP_MULCH, 1))
-        return TRUE;
-    if (CheckBagHasItem(ITEM_STABLE_MULCH, 1))
-        return TRUE;
-    if (CheckBagHasItem(ITEM_GOOEY_MULCH, 1))
-        return TRUE;
-    if (CheckBagHasItem(ITEM_RICH_MULCH, 1))
-        return TRUE;
-    if (CheckBagHasItem(ITEM_SURPRISE_MULCH, 1))
-        return TRUE;
-    if (CheckBagHasItem(ITEM_BOOST_MULCH, 1))
-        return TRUE;
-    if (CheckBagHasItem(ITEM_AMAZE_MULCH, 1))
-        return TRUE;
+    // if (!OW_BERRY_MULCH_USAGE)
+        // return FALSE;
+    // if (CheckBagHasItem(ITEM_GROWTH_MULCH, 1))
+        // return TRUE;
+    // if (CheckBagHasItem(ITEM_DAMP_MULCH, 1))
+        // return TRUE;
+    // if (CheckBagHasItem(ITEM_STABLE_MULCH, 1))
+        // return TRUE;
+    // if (CheckBagHasItem(ITEM_GOOEY_MULCH, 1))
+        // return TRUE;
+    // if (CheckBagHasItem(ITEM_RICH_MULCH, 1))
+        // return TRUE;
+    // if (CheckBagHasItem(ITEM_SURPRISE_MULCH, 1))
+        // return TRUE;
+    // if (CheckBagHasItem(ITEM_BOOST_MULCH, 1))
+        // return TRUE;
+    // if (CheckBagHasItem(ITEM_AMAZE_MULCH, 1))
+        // return TRUE;
     return FALSE;
 }
 
@@ -2978,7 +2981,8 @@ static u8 GetMutationOutcome(u8 berry1, u8 berry2)
 
 static u8 TryForMutation(u8 berryTreeId, u8 berry)
 {
-    u8 i, j, mulch;
+    // u8 i, j, mulch;
+    u8 i, j;
     s16 x1, x2, y1, y2;
 
     // Get location of current tree
@@ -2993,7 +2997,7 @@ static u8 TryForMutation(u8 berryTreeId, u8 berry)
     x1 = gObjectEvents[i].currentCoords.x;
     y1 = gObjectEvents[i].currentCoords.y;
 
-    mulch = GetMulchByBerryTreeId(GetObjectEventBerryTreeId(i));
+    // mulch = GetMulchByBerryTreeId(GetObjectEventBerryTreeId(i));
 
     // Try mutation for each adjacent tree
     for (j = 0; j < OBJECT_EVENTS_COUNT; j++)
@@ -3004,8 +3008,8 @@ static u8 TryForMutation(u8 berryTreeId, u8 berry)
             y2 = gObjectEvents[j].currentCoords.y;
             u32 rate = OW_BERRY_MUTATION_CHANCE;
 
-            if (mulch == ITEM_TO_MULCH(ITEM_SURPRISE_MULCH) || mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH))
-                rate *= 2;
+            // if (mulch == ITEM_TO_MULCH(ITEM_SURPRISE_MULCH) || mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH))
+                // rate *= 2;
 
             if (Random() % 100 < rate && (
                 (x1 == x2 && y1 == y2 - 1) ||

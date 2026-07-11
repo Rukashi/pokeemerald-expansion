@@ -42,7 +42,7 @@
 #include "string_util.h"
 #include "task.h"
 #include "text.h"
-#include "vs_seeker.h"
+// #include "vs_seeker.h"
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
 #include "constants/item_effects.h"
@@ -80,7 +80,7 @@ static void Task_CloseCantUseKeyItemMessage(u8);
 static void SetDistanceOfClosestHiddenItem(u8, s16, s16);
 static void CB2_OpenPokeblockFromBag(void);
 static void ItemUseOnFieldCB_Honey(u8 taskId);
-static bool32 IsValidLocationForVsSeeker(void);
+// static bool32 IsValidLocationForVsSeeker(void);
 
 static const u8 sText_CantDismountBike[] = _("You can't dismount your BIKE here.{PAUSE_UNTIL_PRESS}");
 static const u8 sText_ItemFinderNearby[] = _("Huh?\nThe ITEMFINDER's responding!\pThere's an item buried around here!{PAUSE_UNTIL_PRESS}");
@@ -1078,18 +1078,18 @@ static void Task_UsedBlackWhiteFlute(u8 taskId)
 void ItemUseOutOfBattle_BlackWhiteFlute(u8 taskId)
 {
     CopyItemName(gSpecialVar_ItemId, gStringVar2);
-    if (gSpecialVar_ItemId == ITEM_WHITE_FLUTE)
-    {
-        FlagSet(FLAG_SYS_ENC_UP_ITEM);
-        FlagClear(FLAG_SYS_ENC_DOWN_ITEM);
-        StringExpandPlaceholders(gStringVar4, sText_UsedVar2WildLured);
-    }
-    else
-    {
-        FlagSet(FLAG_SYS_ENC_DOWN_ITEM);
-        FlagClear(FLAG_SYS_ENC_UP_ITEM);
-        StringExpandPlaceholders(gStringVar4, sText_UsedVar2WildRepelled);
-    }
+    // if (gSpecialVar_ItemId == ITEM_WHITE_FLUTE)
+    // {
+        // FlagSet(FLAG_SYS_ENC_UP_ITEM);
+        // FlagClear(FLAG_SYS_ENC_DOWN_ITEM);
+        // StringExpandPlaceholders(gStringVar4, sText_UsedVar2WildLured);
+    // }
+    // else
+    // {
+        // FlagSet(FLAG_SYS_ENC_DOWN_ITEM);
+        // FlagClear(FLAG_SYS_ENC_UP_ITEM);
+        // StringExpandPlaceholders(gStringVar4, sText_UsedVar2WildRepelled);
+    // }
     gTasks[taskId].data[8] = 0;
     gTasks[taskId].func = Task_UsedBlackWhiteFlute;
 }
@@ -1511,68 +1511,68 @@ void ItemUseOutOfBattle_CannotUse(u8 taskId)
     DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 }
 
-static bool32 IsValidLocationForVsSeeker(void)
-{
-    u16 mapGroup = gSaveBlock1Ptr->location.mapGroup;
-    u16 mapNum = gSaveBlock1Ptr->location.mapNum;
-    enum MapType mapType = gMapHeader.mapType;
+// static bool32 IsValidLocationForVsSeeker(void)
+// {
+    // u16 mapGroup = gSaveBlock1Ptr->location.mapGroup;
+    // u16 mapNum = gSaveBlock1Ptr->location.mapNum;
+    // enum MapType mapType = gMapHeader.mapType;
 
-    typedef struct {
-        u16 mapGroup;
-        u16 mapNum;
-    } Location;
+    // typedef struct {
+        // u16 mapGroup;
+        // u16 mapNum;
+    // } Location;
 
-    u32 i;
-    Location validIndoorLocations[] =
-    {
-        { MAP_GROUP(MAP_MT_PYRE_SUMMIT),           MAP_NUM(MAP_MT_PYRE_SUMMIT) },
-        { MAP_GROUP(MAP_SAFARI_ZONE_NORTH),        MAP_NUM(MAP_SAFARI_ZONE_NORTH) },
-        { MAP_GROUP(MAP_SAFARI_ZONE_NORTHEAST),    MAP_NUM(MAP_SAFARI_ZONE_NORTHEAST) },
-        { MAP_GROUP(MAP_SAFARI_ZONE_NORTHWEST),    MAP_NUM(MAP_SAFARI_ZONE_NORTHWEST) },
-        { MAP_GROUP(MAP_SAFARI_ZONE_SOUTH),        MAP_NUM(MAP_SAFARI_ZONE_SOUTH) },
-        { MAP_GROUP(MAP_SAFARI_ZONE_SOUTHEAST),    MAP_NUM(MAP_SAFARI_ZONE_SOUTHEAST) },
-        { MAP_GROUP(MAP_SAFARI_ZONE_SOUTHWEST),    MAP_NUM(MAP_SAFARI_ZONE_SOUTHWEST) },
-        { MAP_GROUP(MAP_SKY_PILLAR_TOP),           MAP_NUM(MAP_SKY_PILLAR_TOP) },
-        { MAP_GROUP(MAP_SOUTHERN_ISLAND_EXTERIOR), MAP_NUM(MAP_SOUTHERN_ISLAND_EXTERIOR) },
-        { MAP_GROUP(MAP_SOUTHERN_ISLAND_INTERIOR), MAP_NUM(MAP_SOUTHERN_ISLAND_INTERIOR) },
-        { MAP_GROUP(MAP_RUSTBORO_CITY_GYM),        MAP_NUM(MAP_RUSTBORO_CITY_GYM) },
-        { MAP_GROUP(MAP_DEWFORD_TOWN_GYM),         MAP_NUM(MAP_DEWFORD_TOWN_GYM) },
-        { MAP_GROUP(MAP_MAUVILLE_CITY_GYM),        MAP_NUM(MAP_MAUVILLE_CITY_GYM) },
-        { MAP_GROUP(MAP_LAVARIDGE_TOWN_GYM_1F),    MAP_NUM(MAP_LAVARIDGE_TOWN_GYM_1F) },
-        { MAP_GROUP(MAP_LAVARIDGE_TOWN_GYM_B1F),   MAP_NUM(MAP_LAVARIDGE_TOWN_GYM_B1F) },
-        { MAP_GROUP(MAP_PETALBURG_CITY_GYM),       MAP_NUM(MAP_PETALBURG_CITY_GYM) },
-        { MAP_GROUP(MAP_FORTREE_CITY_GYM),         MAP_NUM(MAP_FORTREE_CITY_GYM) },
-        { MAP_GROUP(MAP_MOSSDEEP_CITY_GYM),        MAP_NUM(MAP_MOSSDEEP_CITY_GYM) },
-        { MAP_GROUP(MAP_SOOTOPOLIS_CITY_GYM_1F),   MAP_NUM(MAP_SOOTOPOLIS_CITY_GYM_1F) },
-        { MAP_GROUP(MAP_SOOTOPOLIS_CITY_GYM_B1F),  MAP_NUM(MAP_SOOTOPOLIS_CITY_GYM_B1F) },
-    };
+    // u32 i;
+    // Location validIndoorLocations[] =
+    // {
+        // { MAP_GROUP(MAP_MT_PYRE_SUMMIT),           MAP_NUM(MAP_MT_PYRE_SUMMIT) },
+        // { MAP_GROUP(MAP_SAFARI_ZONE_NORTH),        MAP_NUM(MAP_SAFARI_ZONE_NORTH) },
+        // { MAP_GROUP(MAP_SAFARI_ZONE_NORTHEAST),    MAP_NUM(MAP_SAFARI_ZONE_NORTHEAST) },
+        // { MAP_GROUP(MAP_SAFARI_ZONE_NORTHWEST),    MAP_NUM(MAP_SAFARI_ZONE_NORTHWEST) },
+        // { MAP_GROUP(MAP_SAFARI_ZONE_SOUTH),        MAP_NUM(MAP_SAFARI_ZONE_SOUTH) },
+        // { MAP_GROUP(MAP_SAFARI_ZONE_SOUTHEAST),    MAP_NUM(MAP_SAFARI_ZONE_SOUTHEAST) },
+        // { MAP_GROUP(MAP_SAFARI_ZONE_SOUTHWEST),    MAP_NUM(MAP_SAFARI_ZONE_SOUTHWEST) },
+        // { MAP_GROUP(MAP_SKY_PILLAR_TOP),           MAP_NUM(MAP_SKY_PILLAR_TOP) },
+        // { MAP_GROUP(MAP_SOUTHERN_ISLAND_EXTERIOR), MAP_NUM(MAP_SOUTHERN_ISLAND_EXTERIOR) },
+        // { MAP_GROUP(MAP_SOUTHERN_ISLAND_INTERIOR), MAP_NUM(MAP_SOUTHERN_ISLAND_INTERIOR) },
+        // { MAP_GROUP(MAP_RUSTBORO_CITY_GYM),        MAP_NUM(MAP_RUSTBORO_CITY_GYM) },
+        // { MAP_GROUP(MAP_DEWFORD_TOWN_GYM),         MAP_NUM(MAP_DEWFORD_TOWN_GYM) },
+        // { MAP_GROUP(MAP_MAUVILLE_CITY_GYM),        MAP_NUM(MAP_MAUVILLE_CITY_GYM) },
+        // { MAP_GROUP(MAP_LAVARIDGE_TOWN_GYM_1F),    MAP_NUM(MAP_LAVARIDGE_TOWN_GYM_1F) },
+        // { MAP_GROUP(MAP_LAVARIDGE_TOWN_GYM_B1F),   MAP_NUM(MAP_LAVARIDGE_TOWN_GYM_B1F) },
+        // { MAP_GROUP(MAP_PETALBURG_CITY_GYM),       MAP_NUM(MAP_PETALBURG_CITY_GYM) },
+        // { MAP_GROUP(MAP_FORTREE_CITY_GYM),         MAP_NUM(MAP_FORTREE_CITY_GYM) },
+        // { MAP_GROUP(MAP_MOSSDEEP_CITY_GYM),        MAP_NUM(MAP_MOSSDEEP_CITY_GYM) },
+        // { MAP_GROUP(MAP_SOOTOPOLIS_CITY_GYM_1F),   MAP_NUM(MAP_SOOTOPOLIS_CITY_GYM_1F) },
+        // { MAP_GROUP(MAP_SOOTOPOLIS_CITY_GYM_B1F),  MAP_NUM(MAP_SOOTOPOLIS_CITY_GYM_B1F) },
+    // };
 
-    if (IsMapTypeOutdoors(mapType))
-        return TRUE;
+    // if (IsMapTypeOutdoors(mapType))
+        // return TRUE;
 
-    for (i = 0; i < ARRAY_COUNT(validIndoorLocations); i++)
-    {
-        if (mapNum == validIndoorLocations[i].mapNum && mapGroup == validIndoorLocations[i].mapGroup)
-            return TRUE;
-    }
+    // for (i = 0; i < ARRAY_COUNT(validIndoorLocations); i++)
+    // {
+        // if (mapNum == validIndoorLocations[i].mapNum && mapGroup == validIndoorLocations[i].mapGroup)
+            // return TRUE;
+    // }
 
-    return FALSE;
-}
+    // return FALSE;
+// }
 
 void FieldUseFunc_VsSeeker(u8 taskId)
 {
-    if (IsValidLocationForVsSeeker())
-    {
-        sItemUseOnFieldCB = Task_InitVsSeekerAndCheckForTrainersOnScreen;
-        SetUpItemUseOnFieldCallback(taskId);
-    }
-    else
-        DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
+    // if (IsValidLocationForVsSeeker())
+    // {
+        // sItemUseOnFieldCB = Task_InitVsSeekerAndCheckForTrainersOnScreen;
+        // SetUpItemUseOnFieldCallback(taskId);
+    // }
+    // else
+        // DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 }
 
 void Task_ItemUse_CloseMessageBoxAndReturnToField_VsSeeker(u8 taskId)
 {
-    Task_CloseCantUseKeyItemMessage(taskId);
+    // Task_CloseCantUseKeyItemMessage(taskId);
 }
 
 static void Task_DisplayPokeFluteMessage(u8 taskId)

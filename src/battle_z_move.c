@@ -44,13 +44,12 @@
 #define STAT_STAGE(battler, stat) (gBattleMons[battler].statStages[stat - 1])
 
 // Function Declarations
-static void ZMoveSelectionDisplayPpNumber(enum BattlerId battler);
-static void ZMoveSelectionDisplayPower(enum Move move, enum Move zMove);
-static void ZMoveSelectionDisplayMoveType(enum Move zMove, enum BattlerId battler);
+// static void ZMoveSelectionDisplayPpNumber(enum BattlerId battler);1
+// static void ZMoveSelectionDisplayPower(enum Move move, enum Move zMove);
+// static void ZMoveSelectionDisplayMoveType(enum Move zMove, enum BattlerId battler);
 
 // Const Data
-static const struct SignatureZMove sSignatureZMoves[] =
-{
+/* static const struct SignatureZMove sSignatureZMoves[] = {
     {SPECIES_PIKACHU_COSPLAY,         ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
     {SPECIES_PIKACHU_ROCK_STAR,       ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
     {SPECIES_PIKACHU_BELLE,           ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
@@ -92,7 +91,7 @@ static const struct SignatureZMove sSignatureZMoves[] =
     {SPECIES_PIKACHU,                 ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
     {SPECIES_EEVEE,                   ITEM_EEVIUM_Z,             MOVE_LAST_RESORT,         MOVE_EXTREME_EVOBOOST},
     {SPECIES_SNORLAX,                 ITEM_SNORLIUM_Z,           MOVE_GIGA_IMPACT,         MOVE_PULVERIZING_PANCAKE},
-};
+}; */
 
 static const u8 sText_ResetStats[] = _("Reset Lowered Stats");
 static const u8 sText_StatsPlus[] = _("+ All Stats");
@@ -105,14 +104,12 @@ static const u8 sText_PowerColon[] = _("Power: ");
 static const u8 sText_NoAdditionalEffect[] = _("No Additional Effect");
 
 // Functions
-bool32 IsZMove(enum Move move)
-{
+bool32 IsZMove(enum Move move) {
     return move >= FIRST_Z_MOVE && move <= LAST_Z_MOVE;
 }
 
-bool32 CanUseZMove(enum BattlerId battler)
-{
-    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
+bool32 CanUseZMove(enum BattlerId battler) {
+    /* enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
     enum BattlerPosition position = GetBattlerPosition(battler);
 
     // Check if Player has Z-Power Ring.
@@ -138,12 +135,12 @@ bool32 CanUseZMove(enum BattlerId battler)
         return FALSE;
 
     // All checks passed!
-    return TRUE;
+    return TRUE; */
+    return FALSE;
 }
 
-enum Move GetUsableZMove(enum BattlerId battler, enum Move move)
-{
-    enum Item item = gBattleMons[battler].item;
+enum Move GetUsableZMove(enum BattlerId battler, enum Move move) {
+    /* enum Item item = gBattleMons[battler].item;
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
@@ -154,19 +151,17 @@ enum Move GetUsableZMove(enum BattlerId battler, enum Move move)
 
         if (move != MOVE_NONE && zMove != MOVE_Z_STATUS && GetMoveType(move) == GetItemSecondaryId(item))
             return GetTypeBasedZMove(move);
-    }
+    } */
 
     return MOVE_NONE;
 }
 
-void ActivateZMove(enum BattlerId battler)
-{
+/* void ActivateZMove(enum BattlerId battler) {
     SetActiveGimmick(battler, GIMMICK_Z_MOVE);
-}
+} */
 
-bool32 IsViableZMove(enum BattlerId battler, enum Move move)
-{
-    enum Item item;
+bool32 IsViableZMove(enum BattlerId battler, enum Move move) {
+    /* enum Item item;
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
     int moveSlotIndex;
 
@@ -198,13 +193,12 @@ bool32 IsViableZMove(enum BattlerId battler, enum Move move)
 
         if (move != MOVE_NONE && GetMoveType(move) == GetItemSecondaryId(item))
             return TRUE;
-    }
+    } */
 
     return FALSE;
 }
 
-void AssignUsableZMoves(enum BattlerId battler, enum Move *moves)
-{
+/* void AssignUsableZMoves(enum BattlerId battler, enum Move *moves) {
     u32 i;
     gBattleStruct->zmove.possibleZMoves[battler] = 0;
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -212,10 +206,9 @@ void AssignUsableZMoves(enum BattlerId battler, enum Move *moves)
         if (moves[i] != MOVE_NONE && IsViableZMove(battler, moves[i]))
             gBattleStruct->zmove.possibleZMoves[battler] |= 1u << i;
     }
-}
+} */
 
-bool32 TryChangeZTrigger(enum BattlerId battler, u32 moveIndex)
-{
+/* bool32 TryChangeZTrigger(enum BattlerId battler, u32 moveIndex) {
     bool32 viableZMove = (gBattleStruct->zmove.possibleZMoves[battler] & (1u << moveIndex)) != 0;
 
     if (gBattleStruct->zmove.viable && !viableZMove)
@@ -226,24 +219,22 @@ bool32 TryChangeZTrigger(enum BattlerId battler, u32 moveIndex)
     gBattleStruct->zmove.viable = viableZMove;
 
     return viableZMove;
-}
+} */
 
-enum Move GetSignatureZMove(enum Move move, enum Species species, enum Item item)
-{
-    u32 i;
+enum Move GetSignatureZMove(enum Move move, enum Species species, enum Item item)  {
+    /* u32 i;
 
     // Check signature z move
     for (i = 0; i < ARRAY_COUNT(sSignatureZMoves); ++i)
     {
         if (sSignatureZMoves[i].item == item && sSignatureZMoves[i].species == species &&  sSignatureZMoves[i].move == move)
             return sSignatureZMoves[i].zmove;
-    }
+    } */
 
     return MOVE_NONE;
 }
 
-enum Move GetTypeBasedZMove(enum Move move)
-{
+/* enum Move GetTypeBasedZMove(enum Move move) {
     enum Type moveType = GetMoveType(move);
 
     if (moveType >= NUMBER_OF_MON_TYPES)
@@ -257,11 +248,10 @@ enum Move GetTypeBasedZMove(enum Move move)
     if (gTypesInfo[moveType].zMove == MOVE_NONE) // failsafe
         return gTypesInfo[0].zMove;
     return gTypesInfo[moveType].zMove;
-}
+} */
 
-bool32 MoveSelectionDisplayZMove(enum Move zmove, enum BattlerId battler)
-{
-    u32 i;
+bool32 MoveSelectionDisplayZMove(enum Move zmove, enum BattlerId battler) {
+    /* u32 i;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
     enum Move move = moveInfo->moves[gMoveSelectionCursor[battler]];
 
@@ -381,13 +371,12 @@ bool32 MoveSelectionDisplayZMove(enum Move zmove, enum BattlerId battler)
         ZMoveSelectionDisplayMoveType(zmove, battler);
         MoveSelectionCreateCursorAt(0, 0);
         return TRUE;
-    }
+    } */
 
     return FALSE;
 }
 
-static void ZMoveSelectionDisplayPower(enum Move move, enum Move zMove)
-{
+/* static void ZMoveSelectionDisplayPower(enum Move move, enum Move zMove) {
     u8 *txtPtr;
     u16 power = GetZMovePower(move);
 
@@ -400,10 +389,9 @@ static void ZMoveSelectionDisplayPower(enum Move move, enum Move zMove)
         ConvertIntToDecimalStringN(txtPtr, power, STR_CONV_MODE_LEFT_ALIGN, 3);
         BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MOVE_NAME_3);
     }
-}
+} */
 
-static void ZMoveSelectionDisplayPpNumber(enum BattlerId battler)
-{
+/* static void ZMoveSelectionDisplayPpNumber(enum BattlerId battler) {
     u8 *txtPtr;
 
     if (gBattleResources->bufferA[battler][2] == TRUE) // Check if we didn't want to display pp number
@@ -414,10 +402,9 @@ static void ZMoveSelectionDisplayPpNumber(enum BattlerId battler)
     *(txtPtr)++ = CHAR_SLASH;
     ConvertIntToDecimalStringN(txtPtr, 1, STR_CONV_MODE_RIGHT_ALIGN, 2);
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_PP_REMAINING);
-}
+} */
 
-static void ZMoveSelectionDisplayMoveType(enum Move zMove, enum BattlerId battler)
-{
+/* static void ZMoveSelectionDisplayMoveType(enum Move zMove, enum BattlerId battler) {
     u8 *txtPtr, *end;
     enum Type zMoveType = GetBattleMoveType(zMove);
 
@@ -429,13 +416,12 @@ static void ZMoveSelectionDisplayMoveType(enum Move zMove, enum BattlerId battle
     end = StringCopy(txtPtr, gTypesInfo[zMoveType].name);
     PrependFontIdToFit(txtPtr, end, FONT_NORMAL, WindowWidthPx(B_WIN_MOVE_TYPE) - 25);
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MOVE_TYPE);
-}
+} */
 
 #define Z_EFFECT_BS_LENGTH  5
-// This function kinda cheats by setting a return battle script to after the setzeffect various command
-// and then jumping to a z effect script
-void SetZEffect(const u8 *nextInstr)
-{
+/* void SetZEffect(const u8 *nextInstr) {
+	// This function kinda cheats by setting a return battle script to after the setzeffect various command
+	// and then jumping to a z effect script
     u32 i;
     s32 stage = 0;
     enum ZEffect effect = GetMoveZEffect(gChosenMove);
@@ -588,10 +574,9 @@ void SetZEffect(const u8 *nextInstr)
         gBattlescriptCurrInstr = nextInstr;
         break;
     }
-}
+} */
 
-u32 GetZMovePower(enum Move move)
-{
+/* u32 GetZMovePower(enum Move move) {
     if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
         return 0;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
@@ -613,4 +598,4 @@ u32 GetZMovePower(enum Move move)
     else if (power >= 70)  return 140;
     else if (power >= 60)  return 120;
     else                   return 100;
-}
+} */

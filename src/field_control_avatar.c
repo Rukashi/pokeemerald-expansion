@@ -34,7 +34,7 @@
 #include "start_menu.h"
 #include "trainer_see.h"
 #include "trainer_hill.h"
-#include "vs_seeker.h"
+// #include "vs_seeker.h"
 #include "wild_encounter.h"
 #include "wild_encounter_ow.h"
 #include "constants/event_bg.h"
@@ -806,11 +806,11 @@ static bool8 TryStartStepCountScript(u16 metatileBehavior)
             ScriptContext_SetupScript(MossdeepCity_SpaceCenter_2F_EventScript_RivalRayquazaCall);
             return TRUE;
         }
-        if (UpdateVsSeekerStepCounter())
-        {
-            ScriptContext_SetupScript(EventScript_VsSeekerChargingDone);
-            return TRUE;
-        }
+        // if (UpdateVsSeekerStepCounter())
+        // {
+            // ScriptContext_SetupScript(EventScript_VsSeekerChargingDone);
+            // return TRUE;
+        // }
     }
 
     if (SafariZoneTakeStep() == TRUE)

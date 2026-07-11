@@ -433,7 +433,7 @@ void HandleAction_UseMove(void)
     // Set dynamic move type.
     SetTypeBeforeUsingMove(gChosenMove, gBattlerAttacker);
 
-    // check Z-Move used
+    /* // check Z-Move used
     if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE && !IsBattleMoveStatus(gCurrentMove) && !IsZMove(gCurrentMove))
     {
         gBattleStruct->categoryOverride = GetMoveCategory(gCurrentMove);
@@ -444,7 +444,7 @@ void HandleAction_UseMove(void)
     {
         gBattleStruct->categoryOverride = GetMoveCategory(gCurrentMove);
         gCurrentMove = gChosenMove = GetMaxMove(gBattlerAttacker, gCurrentMove);
-    }
+    } */
 
     gBattleStruct->eventState.atkCanceler = 0;
     ClearDamageCalcResults();
@@ -5783,7 +5783,8 @@ bool32 IsBattlerProtected(struct BattleCalcValues *cv)
 
     if (gProtectStructs[cv->battlerDef].protected != PROTECT_MAX_GUARD && !MoveIgnoresProtect(cv->move))
     {
-        if (IsZMove(cv->move) || IsMaxMove(cv->move))
+        // if (IsZMove(cv->move) || IsMaxMove(cv->move))
+        if (IsMaxMove(cv->move))
             return FALSE; // Z-Moves and Max Moves bypass protection (except Max Guard).
         if ((cv->abilities[cv->battlerAtk] == ABILITY_UNSEEN_FIST || cv->abilities[cv->battlerAtk] == ABILITY_PIERCING_DRILL)
          && IsMoveMakingContact(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], cv->move))
@@ -6119,11 +6120,11 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     u32 moveEffect = GetMoveEffect(move);
     u32 weight, hpFraction, speed;
 
-    if (GetActiveGimmick(battlerAtk) == GIMMICK_Z_MOVE)
-        return GetZMovePower(gCurrentMove);
+    // if (GetActiveGimmick(battlerAtk) == GIMMICK_Z_MOVE)
+        // return GetZMovePower(gCurrentMove);
 
-    if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
-        return GetMaxMovePower(move);
+    // if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
+        // return GetMaxMovePower(move);
 
     switch (moveEffect)
     {
@@ -6344,9 +6345,9 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         if (GetConfig(B_BEAT_UP) >= GEN_5)
             basePower = CalcBeatUpPower();
         break;
-    case EFFECT_MAX_MOVE:
-        basePower = GetMaxMovePower(GetBattlerChosenMove(battlerAtk));
-        break;
+    // case EFFECT_MAX_MOVE:
+        // basePower = GetMaxMovePower(GetBattlerChosenMove(battlerAtk));
+        // break;
     case EFFECT_RAGE_FIST:
         basePower += 50 * GetBattlerPartyState(battlerAtk)->timesGotHit;
         basePower = (basePower > 350) ? 350 : basePower;
@@ -7308,7 +7309,8 @@ static inline uq4_12_t GetGlaiveRushModifier(enum BattlerId battlerDef)
 
 static inline uq4_12_t GetZMaxMoveAgainstProtectionModifier(struct DamageContext *ctx)
 {
-    if (!IsZMove(ctx->move) && !IsMaxMove(ctx->move))
+    // if (!IsZMove(ctx->move) && !IsMaxMove(ctx->move))
+    if (!IsMaxMove(ctx->move))
         return UQ_4_12(1.0);
 
     u32 protected = gProtectStructs[ctx->battlerDef].protected;
@@ -7617,9 +7619,9 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
 
 s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
 {
-    if (GetActiveGimmick(ctx->battlerAtk) == GIMMICK_TERA)
-        DAMAGE_APPLY_MODIFIER(GetTeraMultiplier(ctx));
-    else
+    // if (GetActiveGimmick(ctx->battlerAtk) == GIMMICK_TERA)
+        // DAMAGE_APPLY_MODIFIER(GetTeraMultiplier(ctx));
+    // else
         DAMAGE_APPLY_MODIFIER(GetSameTypeAttackBonusModifier(ctx));
     DAMAGE_APPLY_MODIFIER(ctx->typeEffectivenessModifier);
     DAMAGE_APPLY_MODIFIER(GetBurnOrFrostBiteModifier(ctx));
@@ -8462,7 +8464,7 @@ bool32 CanMegaEvolve(enum BattlerId battler)
 
 bool32 CanUltraBurst(enum BattlerId battler)
 {
-    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
+    /* enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
     enum BattlerPosition position = GetBattlerPosition(battler);
 
     // Check if Player has a Z-Ring
@@ -8487,7 +8489,7 @@ bool32 CanUltraBurst(enum BattlerId battler)
 
     // Check if there is an entry in the form change table for Ultra Burst and battler is holding a Z-Crystal.
     if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_ULTRA_BURST, ability) != gBattleMons[battler].species && holdEffect == HOLD_EFFECT_Z_CRYSTAL)
-        return TRUE;
+        return TRUE; */
 
     // No checks passed, the mon CAN'T ultra burst.
     return FALSE;
@@ -8977,7 +8979,8 @@ enum DamageCategory GetBattleMoveCategory(enum Move move)
     {
         if (gBattleStruct->swapDamageCategory) // Photon Geyser, Shell Side Arm, Light That Burns the Sky, Tera Blast
             return SwapMoveDamageCategory(move);
-        if (IsZMove(move) || IsMaxMove(move)) // TODO: Might be buggy depending on when this is called.
+        // if (IsZMove(move) || IsMaxMove(move)) // TODO: Might be buggy depending on when this is called.
+        if (IsMaxMove(move)) // TODO: Might be buggy depending on when this is called.
             return gBattleStruct->categoryOverride;
         if (IsBattleMoveStatus(move))
             return DAMAGE_CATEGORY_STATUS;

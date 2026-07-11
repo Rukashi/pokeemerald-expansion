@@ -712,9 +712,9 @@ void HandleInputChooseMove(enum BattlerId battler)
                 moveTarget = TARGET_SELECTED;  //damaging z moves always have selected target
         }
 
-        // Status moves turn into Max Guard when Dynamaxed, targets user.
+        /* // Status moves turn into Max Guard when Dynamaxed, targets user.
         if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
-            moveTarget = GetMoveTarget(GetMaxMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]));
+            moveTarget = GetMoveTarget(GetMaxMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]])); */
 
         if (isUserOrAlly)
             gMultiUsePlayerCursor = battler;
@@ -825,7 +825,7 @@ void HandleInputChooseMove(enum BattlerId battler)
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryMoveSelectionDisplayMoveDescription(battler);
-            TryChangeZTrigger(battler, gMoveSelectionCursor[battler]);
+            // TryChangeZTrigger(battler, gMoveSelectionCursor[battler]);
         }
     }
     else if (JOY_NEW(DPAD_RIGHT) && !gBattleStruct->zmove.viewing)
@@ -842,7 +842,7 @@ void HandleInputChooseMove(enum BattlerId battler)
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryMoveSelectionDisplayMoveDescription(battler);
-            TryChangeZTrigger(battler, gMoveSelectionCursor[battler]);
+            // TryChangeZTrigger(battler, gMoveSelectionCursor[battler]);
         }
     }
     else if (JOY_NEW(DPAD_UP) && !gBattleStruct->zmove.viewing)
@@ -858,7 +858,7 @@ void HandleInputChooseMove(enum BattlerId battler)
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryMoveSelectionDisplayMoveDescription(battler);
-            TryChangeZTrigger(battler, gMoveSelectionCursor[battler]);
+            // TryChangeZTrigger(battler, gMoveSelectionCursor[battler]);
         }
     }
     else if (JOY_NEW(DPAD_DOWN) && !gBattleStruct->zmove.viewing)
@@ -875,7 +875,7 @@ void HandleInputChooseMove(enum BattlerId battler)
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
             TryMoveSelectionDisplayMoveDescription(battler);
-            TryChangeZTrigger(battler, gMoveSelectionCursor[battler]);
+            // TryChangeZTrigger(battler, gMoveSelectionCursor[battler]);
         }
     }
     else if (B_MOVE_REARRANGEMENT_IN_BATTLE < GEN_4 && JOY_NEW(SELECT_BUTTON) && !gBattleStruct->zmove.viewing && !gBattleStruct->descriptionSubmenu)
@@ -924,9 +924,9 @@ void HandleInputChooseMove(enum BattlerId battler)
     else if (JOY_NEW(START_BUTTON))
     {
         if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE
-            && !HasTrainerUsedGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler])
-            && !(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE
-                 && GetUsableZMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]) == MOVE_NONE))
+            && !HasTrainerUsedGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler]))
+            // && !(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE
+                 // && GetUsableZMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]) == MOVE_NONE))
         {
             gBattleStruct->gimmick.playerSelect ^= 1;
             ReloadMoveNames(battler);
@@ -938,13 +938,13 @@ void HandleInputChooseMove(enum BattlerId battler)
 
 static void ReloadMoveNames(enum BattlerId battler)
 {
-    if (gBattleStruct->zmove.viable && !gBattleStruct->zmove.viewing)
-    {
-        struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
-        MoveSelectionDisplayZMove(GetUsableZMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]), battler);
-    }
-    else
-    {
+    // if (gBattleStruct->zmove.viable && !gBattleStruct->zmove.viewing)
+    // {
+        // struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
+        // MoveSelectionDisplayZMove(GetUsableZMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]), battler);
+    // }
+    // else
+    // {
         gBattleStruct->zmove.viewing = FALSE;
         MoveSelectionDestroyCursorAt(battler);
         MoveSelectionDisplayMoveNames(battler);
@@ -953,7 +953,7 @@ static void ReloadMoveNames(enum BattlerId battler)
             MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
         MoveSelectionDisplayPpNumber(battler);
         MoveSelectionDisplayMoveType(battler);
-    }
+    // }
 }
 
 static u32 UNUSED HandleMoveInputUnused(enum BattlerId battler)
@@ -1014,7 +1014,7 @@ void HandleMoveSwitching(enum BattlerId battler)
 
     if (JOY_NEW(A_BUTTON | SELECT_BUTTON))
     {
-        struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
+        // struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
         PlaySE(SE_SELECT);
 
         if (gMoveSelectionCursor[battler] != gMultiUsePlayerCursor)
@@ -1112,7 +1112,7 @@ void HandleMoveSwitching(enum BattlerId battler)
             MoveSelectionDisplayPpString(battler);
         MoveSelectionDisplayPpNumber(battler);
         MoveSelectionDisplayMoveType(battler);
-        AssignUsableZMoves(battler, moveInfo->moves);
+        // AssignUsableZMoves(battler, moveInfo->moves);
     }
     else if (JOY_NEW(B_BUTTON | SELECT_BUTTON))
     {
@@ -1673,9 +1673,9 @@ static void MoveSelectionDisplayMoveNames(enum BattlerId battler)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         MoveSelectionDestroyCursorAt(i);
-        if (IsGimmickSelected(battler, GIMMICK_DYNAMAX) || GetActiveGimmick(battler) == GIMMICK_DYNAMAX)
+        /* if (IsGimmickSelected(battler, GIMMICK_DYNAMAX) || GetActiveGimmick(battler) == GIMMICK_DYNAMAX)
             StringCopy(gDisplayedStringBattle, GetMoveName(GetMaxMove(battler, moveInfo->moves[i])));
-        else
+        else */
             StringCopy(gDisplayedStringBattle, GetMoveName(moveInfo->moves[i]));
         // Prints on windows B_WIN_MOVE_NAME_1, B_WIN_MOVE_NAME_2, B_WIN_MOVE_NAME_3, B_WIN_MOVE_NAME_4
         BattlePutTextOnWindow(gDisplayedStringBattle, i + B_WIN_MOVE_NAME_1);
@@ -1768,12 +1768,12 @@ static void MoveSelectionDisplayMoveDescription(enum BattlerId battler)
     u16 acc = GetMoveAccuracy(move);
     enum DamageCategory cat = GetBattleMoveCategory(move);
 
-    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
+    /* if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
     {
         pwr = GetMaxMovePower(move);
         move = GetMaxMove(battler, move);
         acc = 0;
-    }
+    } */
 
     u8 pwr_num[3], acc_num[3];
     u8 cat_desc[7] = _("CAT: ");
@@ -2118,13 +2118,13 @@ void PlayerHandleChooseMove(enum BattlerId battler)
     }
     else
     {
-        struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
+        // struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
         InitMoveSelectionsVarsAndStrings(battler);
         gBattleStruct->gimmick.playerSelect = FALSE;
         TryToAddMoveInfoWindow();
 
-        AssignUsableZMoves(battler, moveInfo->moves);
+        // AssignUsableZMoves(battler, moveInfo->moves);
         gBattleStruct->zmove.viable = (gBattleStruct->zmove.possibleZMoves[battler] & (1u << gMoveSelectionCursor[battler])) != 0;
 
         if (!IsGimmickTriggerSpriteActive())

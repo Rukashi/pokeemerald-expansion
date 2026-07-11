@@ -565,8 +565,8 @@ static enum CancelerResult CancelerCallSubmove(struct BattleCalcValues *cv)
 
     if (calledMove != MOVE_NONE)
     {
-        if (GetActiveGimmick(cv->battlerAtk) == GIMMICK_Z_MOVE && !IsBattleMoveStatus(calledMove))
-            calledMove = GetTypeBasedZMove(calledMove);
+        // if (GetActiveGimmick(cv->battlerAtk) == GIMMICK_Z_MOVE && !IsBattleMoveStatus(calledMove))
+            // calledMove = GetTypeBasedZMove(calledMove);
         if (cv->moveEffect == EFFECT_COPYCAT && IsMaxMove(calledMove))
             calledMove = gBattleStruct->dynamax.lastUsedBaseMove;
 
@@ -2104,7 +2104,8 @@ static bool32 CantFullyProtectFromMove(enum BattlerId battlerDef)
 {
     if (MoveIgnoresProtect(gCurrentMove))
         return FALSE;
-    if (!IsZMove(gCurrentMove) && !IsMaxMove(gCurrentMove))
+    // if (!IsZMove(gCurrentMove) && !IsMaxMove(gCurrentMove))
+    if (!IsMaxMove(gCurrentMove))
         return FALSE;
     return GetProtectType(gProtectStructs[battlerDef].protected) == PROTECT_TYPE_SINGLE
         && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD;
@@ -2180,8 +2181,8 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
 
     if (ShouldSkipFRLGAccuracyCheck()
      || ShouldSkipAccuracyCalcPastFirstHit(cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], cv->moveEffect)
-     || IsMaxMove(cv->move)
-     || IsZMove(cv->move))
+     || IsMaxMove(cv->move))
+     // || IsZMove(cv->move))
         return CANCELER_RESULT_SUCCESS;
 
     enum SmartTargetState smartTargetState = INITIAL_STATE;
@@ -2930,7 +2931,7 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
              && IsBattlerTurnDamaged(cv->battlerDef, EXCLUDING_SUBSTITUTES)
              && IsBattlerAlive(cv->battlerAtk)
              && !IsBattlerAlly(cv->battlerAtk, cv->battlerDef)
-             && !IsZMove(cv->move)
+             // && !IsZMove(cv->move)
              && cv->move != MOVE_STRUGGLE
              && cv->moveEffect != EFFECT_FUTURE_SIGHT)
             {
@@ -4974,8 +4975,8 @@ static enum Move GetMirrorMoveMove(void)
     if ((move == MOVE_NONE || move == MOVE_UNAVAILABLE) && validMovesCount != 0)
         move = validMoves[Random() % validMovesCount];
 
-    if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE && !IsBattleMoveStatus(move))
-        move = GetTypeBasedZMove(move);
+    // if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE && !IsBattleMoveStatus(move))
+        // move = GetTypeBasedZMove(move);
 
     return move;
 }
@@ -5121,8 +5122,8 @@ static enum Move GetCopycatMove(void)
 {
     if (gLastUsedMove == MOVE_NONE
      || gLastUsedMove == MOVE_UNAVAILABLE
-     || IsMoveCopycatBanned(gLastUsedMove)
-     || IsZMove(gLastUsedMove))
+     || IsMoveCopycatBanned(gLastUsedMove))
+     // || IsZMove(gLastUsedMove))
         return MOVE_NONE;
 
     return gLastUsedMove;
