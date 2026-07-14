@@ -208,4 +208,10 @@ Input must be of the form (upper << lower) where upper can be up to 7, lower up 
 /* Useful for counting arguments */
 #define PLUS_ONE(...) + 1
 
+
+
+#define DIV_ROUND_UP(val, roundBy) (((val) / (roundBy)) + (((val) % (roundBy)) ? 1 : 0))
+
+#define ROUND_BITS_TO_BYTES(numBits) DIV_ROUND_UP(numBits, 8)
+
 #endif

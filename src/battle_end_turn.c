@@ -1499,9 +1499,9 @@ static bool32 HandleEndTurnDynamax(enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
-    /* gBattleStruct->eventState.endTurnBattler++;
+    gBattleStruct->eventState.endTurnBattler++;
 
-    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX
+    /* if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX
      && gBattleStruct->dynamax.dynamaxTurns[battler] > 0)
     {
         if (--gBattleStruct->dynamax.dynamaxTurns[battler] == 0

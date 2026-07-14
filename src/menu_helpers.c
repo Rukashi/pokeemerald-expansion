@@ -316,24 +316,18 @@ bool8 MenuHelpers_ShouldWaitForLinkRecv(void)
         return FALSE;
 }
 
-void SetItemListPerPageCount(struct ItemSlot *slots, u8 slotsCount, u8 *pageItems, u8 *totalItems, u8 maxPerPage)
-{
-    u16 i;
-
-    // Count the number of non-empty item slots
-    *totalItems = 0;
-    for (i = 0; i < slotsCount; i++)
-    {
-        if (slots[i].itemId != ITEM_NONE)
-            (*totalItems)++;
-    }
-    (*totalItems)++; // + 1 for 'Cancel'
-
-    // Set number of items per page
-    if (*totalItems > maxPerPage)
-        *pageItems = maxPerPage;
-    else
-        *pageItems = *totalItems;
+// void SetItemListPerPageCount(struct ItemSlot *slots, u8 slotsCount, u8 *pageItems, u8 *totalItems, u8 maxPerPage)
+void SetItemListPerPageCount(u16 *slots, u8 slotsCount, u8 *pageItems, u8 *totalItems, u8 maxPerPage) {
+	u16 i;
+	
+	// Count the number of non-empty item slots
+	*totalItems = 0;
+	for (i = 0; i < slotsCount; i++) if (slots[i] != ITEM_NONE) (*totalItems)++;
+	(*totalItems)++; // + 1 for 'Cancel'
+	
+	// Set number of items per page
+	if (*totalItems > maxPerPage) *pageItems = maxPerPage;
+	else *pageItems = *totalItems;
 }
 
 void SetCursorWithinListBounds(u16 *scrollOffset, u16 *cursorPos, u8 maxShownItems, u16 totalItems)

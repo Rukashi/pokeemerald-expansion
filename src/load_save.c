@@ -285,6 +285,12 @@ void SavePlayerBag(void)
     gSaveBlock2Ptr->encryptionKey = encryptionKeyBackup; // updated twice?
 }
 
+void ApplyNewEncryptionKeyToByte(u8 *byte, u32 newKey)
+{
+    *byte ^= gSaveBlock2Ptr->encryptionKey;
+    *byte ^= newKey;
+}
+
 void ApplyNewEncryptionKeyToHword(u16 *hWord, u32 newKey)
 {
     *hWord ^= gSaveBlock2Ptr->encryptionKey;

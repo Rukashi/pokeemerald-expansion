@@ -80,11 +80,16 @@ struct GFRomHeader
     u32 gcnLinkFlagsOffset;
     u32 gameClearFlag;
     u32 ribbonFlag;
-    u16 bagCountItems;
-    u8 bagCountKeyItems;
+    u8 bagCountItems;
+    u8 bagCountMedicine;
+	u8 bagCountBattle;
     u8 bagCountPokeballs;
-    u16 bagCountTMHMs;
+    u8 bagCountHeldItems;
+    u8 bagCountMegaStones;
     u8 bagCountBerries;
+    u16 bagCountTMHMs;
+    u8 bagCountValuables;
+    u8 bagCountKeyItems;
     u8 pcItemsCount;
     u32 pcItemsOffset;
     u32 giftRibbonsOffset;
@@ -161,12 +166,17 @@ __attribute__((section(".text.header_gf"))) USED static const struct GFRomHeader
     .gameClearFlag = FLAG_SYS_GAME_CLEAR,
     .ribbonFlag = FLAG_SYS_RIBBON_GET,
     .bagCountItems = BAG_ITEMS_COUNT,
-    .bagCountKeyItems = BAG_KEYITEMS_COUNT,
+    .bagCountMedicine = BAG_MEDICINE_COUNT,
+    .bagCountBattle = BAG_BATTLE_COUNT,
     .bagCountPokeballs = BAG_POKEBALLS_COUNT,
-    .bagCountTMHMs = BAG_TMHM_COUNT,
+    .bagCountHeldItems = BAG_HELD_ITEMS_COUNT,
+    .bagCountMegaStones = BAG_MEGA_STONES_COUNT,
     .bagCountBerries = BAG_BERRIES_COUNT,
+    .bagCountTMHMs = BAG_TMHM_COUNT,
+    .bagCountValuables = BAG_VALUABLES_COUNT,
+    .bagCountKeyItems = BAG_KEYITEMS_COUNT,
     .pcItemsCount = PC_ITEMS_COUNT,
-    .pcItemsOffset = offsetof(struct SaveBlock1, pcItems),
+    .pcItemsOffset = offsetof(struct SaveBlock1, pcItems_id),
     .giftRibbonsOffset = offsetof(struct SaveBlock1, giftRibbons),
 #if FREE_ENIGMA_BERRY == FALSE
     .enigmaBerryOffset = offsetof(struct SaveBlock1, enigmaBerry),
