@@ -22,21 +22,13 @@
 #include "constants/item_effects.h"
 #include "constants/hold_effects.h"
 
-#define DUMMY_PC_BAG_POCKET                 \
-{                                           \
-    .id = POCKET_DUMMY,                     \
-    .capacity = PC_ITEMS_COUNT,             \
-    .item_id = gSaveBlock1Ptr->pcItems_id,   \
-    .item_no = gSaveBlock1Ptr->pcItems_no,   \
-}
-
 static bool32 CheckPyramidBagHasItem(enum Item itemId, u16 count);
 static bool32 CheckPyramidBagHasSpace(enum Item itemId, u16 count);
 static const u8 *GetItemPluralName(enum Item);
 static bool32 DoesItemHavePluralName(enum Item);
 static void NONNULL BagPocket_CompactItems(struct BagPocket *pocket);
 
-EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
+EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT + 1] = {0};
 
 #include "data/pokemon/item_effects.h"
 #include "data/items.h"
@@ -143,6 +135,11 @@ void SetBagItemsPointers(void) {
 	BAG_POINTERS(POCKET_TM_HM, BAG_TMHM_COUNT, TMsHMs_id, TMsHMs_no)
 	BAG_POINTERS(POCKET_VALUABLES, BAG_VALUABLES_COUNT, valuables_id, valuables_no)
 	BAG_POINTERS(POCKET_KEY_ITEMS, BAG_KEYITEMS_COUNT, keyItems_id, keyItems_no)
+	
+	gBagPockets[POCKET_DUMMY].item_id = gSaveBlock1Ptr->pcItems_id;
+	gBagPockets[POCKET_DUMMY].item_no = gSaveBlock1Ptr->pcItems_no;
+	gBagPockets[POCKET_DUMMY].capacity = PC_ITEMS_COUNT;
+	gBagPockets[POCKET_DUMMY].id = POCKET_DUMMY;
 	
 	#undef BAG_POINTERS
 }
@@ -416,10 +413,8 @@ static u8 NONNULL BagPocket_CountUsedItemSlots(struct BagPocket *pocket)
     return usedSlots;
 }
 
-u8 CountUsedPCItemSlots(void)
-{
-    struct BagPocket dummyPocket = DUMMY_PC_BAG_POCKET;
-    return BagPocket_CountUsedItemSlots(&dummyPocket);
+u8 CountUsedPCItemSlots(void) {
+	return BagPocket_CountUsedItemSlots(&gBagPockets[POCKET_DUMMY]);
 }
 
 static bool32 NONNULL BagPocket_CheckPocketForItemCount(struct BagPocket *pocket, enum Item itemId, u16 count)
@@ -435,16 +430,12 @@ static bool32 NONNULL BagPocket_CheckPocketForItemCount(struct BagPocket *pocket
     return FALSE;
 }
 
-bool32 CheckPCHasItem(enum Item itemId, u16 count)
-{
-    struct BagPocket dummyPocket = DUMMY_PC_BAG_POCKET;
-    return BagPocket_CheckPocketForItemCount(&dummyPocket, itemId, count);
+bool32 CheckPCHasItem(enum Item itemId, u16 count) {
+	return BagPocket_CheckPocketForItemCount(&gBagPockets[POCKET_DUMMY], itemId, count);
 }
 
-bool32 AddPCItem(enum Item itemId, u16 count)
-{
-    struct BagPocket dummyPocket = DUMMY_PC_BAG_POCKET;
-    return BagPocket_AddItem(&dummyPocket, itemId, count);
+bool32 AddPCItem(enum Item itemId, u16 count) {
+	return BagPocket_AddItem(&gBagPockets[POCKET_DUMMY], itemId, count);
 }
 
 static void NONNULL BagPocket_CompactItems(struct BagPocket *pocket)
@@ -467,25 +458,20 @@ static void NONNULL BagPocket_CompactItems(struct BagPocket *pocket)
     }
 }
 
-void RemovePCItem(u8 index, u16 count)
-{
-    struct BagPocket dummyPocket = DUMMY_PC_BAG_POCKET;
+void RemovePCItem(u8 index, u16 count) {
+	// Get id, quantity at slot
+	struct ItemSlot tempItem = BagPocket_GetSlotData(&gBagPockets[POCKET_DUMMY], index);
 
-    // Get id, quantity at slot
-    struct ItemSlot tempItem = BagPocket_GetSlotData(&dummyPocket, index);
+	// Remove quantity
+	BagPocket_SetSlotItemIdAndCount(&gBagPockets[POCKET_DUMMY], index, tempItem.itemId, tempItem.quantity - count);
 
-    // Remove quantity
-    BagPocket_SetSlotItemIdAndCount(&dummyPocket, index, tempItem.itemId, tempItem.quantity - count);
-
-    // Compact if necessary
-    if (tempItem.quantity == 0)
-        BagPocket_CompactItems(&dummyPocket);
+	// Compact if necessary
+	if (tempItem.quantity == 0)
+		BagPocket_CompactItems(&gBagPockets[POCKET_DUMMY]);
 }
 
-void CompactPCItems(void)
-{
-    struct BagPocket dummyPocket = DUMMY_PC_BAG_POCKET;
-    BagPocket_CompactItems(&dummyPocket);
+void CompactPCItems(void) {
+	BagPocket_CompactItems(&gBagPockets[POCKET_DUMMY]);
 }
 
 void SwapRegisteredBike(void)
@@ -531,10 +517,8 @@ void MoveItemSlotInPocket(enum Pocket pocketId, u32 from, u32 to)
     BagPocket_MoveItemSlot(&gBagPockets[pocketId], from, to);
 }
 
-// void MoveItemSlotInPC(struct ItemSlot *itemSlots, u32 from, u32 to)
 void MoveItemSlotInPC(u32 from, u32 to) {
-	struct BagPocket dummyPocket = DUMMY_PC_BAG_POCKET;
-	return BagPocket_MoveItemSlot(&dummyPocket, from, to);
+	return BagPocket_MoveItemSlot(&gBagPockets[POCKET_DUMMY], from, to);
 }
 
 void ClearBag(void)
