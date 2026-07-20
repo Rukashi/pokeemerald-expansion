@@ -30,6 +30,8 @@
 #include "constants/layouts.h"
 #include "constants/weather.h"
 
+#include "dynamic_level.h"
+
 extern const u8 EventScript_SprayWoreOff[];
 
 #define MAX_ENCOUNTER_RATE 2880
@@ -506,6 +508,9 @@ static u8 PickWildMonNature(enum Species species)
 
 void CreateWildMon(enum Species species, u8 level)
 {
+	level = DynLvl_LevelUp(level, 1);
+	species = DynLvl_Devolve(species, level, 0, 1);
+	
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species, GetSynchronizedGender(WILDMON_ORIGIN, species), PickWildMonNature(species), RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);

@@ -89,52 +89,52 @@
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
+                "species": "SPECIES_MIGHTYENA"
               },
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
+                "species": "SPECIES_LINOONE"
               },
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_MIGHTYENA"
+              },
+              {
+                "min_level": 2,
+                "max_level": 4,
+                "species": "SPECIES_MIGHTYENA"
               },
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_FURRET"
+              },
+              {
+                "min_level": 2,
+                "max_level": 4,
+                "species": "SPECIES_FURRET"
+              },
+              {
+                "min_level": 2,
+                "max_level": 4,
+                "species": "SPECIES_LINOONE"
               },
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_LINOONE_GALAR"
+              },
+              {
+                "min_level": 2,
+                "max_level": 4,
+                "species": "SPECIES_LINOONE_GALAR"
               },
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON_GALAR"
-              },
-              {
-                "min_level": 2,
-                "max_level": 3,
-                "species": "SPECIES_RATTATA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 3,
-                "species": "SPECIES_RATTATA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 3,
-                "species": "SPECIES_RATTATA"
-              },
-              {
-                "min_level": 2,
-                "max_level": 3,
-                "species": "SPECIES_RATTATA_ALOLA"
+                "species": "SPECIES_FURRET"
               }
             ]
           }
@@ -148,52 +148,52 @@
               {
                 "min_level": 3,
                 "max_level": 4,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_MIGHTYENA"
               },
               {
                 "min_level": 3,
                 "max_level": 4,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 6,
-                "species": "SPECIES_WURMPLE"
+                "species": "SPECIES_LINOONE"
               },
               {
                 "min_level": 3,
                 "max_level": 5,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_MIGHTYENA"
               },
               {
                 "min_level": 3,
                 "max_level": 4,
-                "species": "SPECIES_PIDGEY"
+                "species": "SPECIES_FURRET"
+              },
+              {
+                "min_level": 3,
+                "max_level": 4,
+                "species": "SPECIES_PIDGEOTTO"
               },
               {
                 "min_level": 3,
                 "max_level": 5,
-                "species": "SPECIES_PIDGEY"
+                "species": "SPECIES_FURRET"
               },
               {
                 "min_level": 3,
                 "max_level": 5,
-                "species": "SPECIES_ZIGZAGOON_GALAR"
+                "species": "SPECIES_LINOONE_GALAR"
               },
               {
                 "min_level": 3,
                 "max_level": 5,
-                "species": "SPECIES_POOCHYENA"
+                "species": "SPECIES_PIDGEOTTO"
               },
               {
                 "min_level": 3,
                 "max_level": 5,
-                "species": "SPECIES_WURMPLE"
+                "species": "SPECIES_PIDGEOT"
               },
               {
                 "min_level": 3,
                 "max_level": 5,
-                "species": "SPECIES_RALTS"
+                "species": "SPECIES_KIRLIA"
               }
             ]
           },
@@ -317,52 +317,52 @@
               {
                 "min_level": 2,
                 "max_level": 4,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_LINOONE"
               },
               {
                 "min_level": 2,
                 "max_level": 4,
-                "species": "SPECIES_POOCHYENA"
+                "species": "SPECIES_MIGHTYENA"
               },
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_LINOONE"
               },
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
+                "species": "SPECIES_MIGHTYENA"
               },
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
+                "species": "SPECIES_MIGHTYENA"
               },
               {
                 "min_level": 2,
                 "max_level": 4,
-                "species": "SPECIES_RATTATA"
+                "species": "SPECIES_FURRET"
               },
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_RATTATA"
+                "species": "SPECIES_FURRET"
               },
               {
                 "min_level": 2,
                 "max_level": 4,
-                "species": "SPECIES_RATTATA_ALOLA"
+                "species": "SPECIES_FURRET"
               },
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON_GALAR"
+                "species": "SPECIES_LINOONE_GALAR"
               },
               {
                 "min_level": 2,
                 "max_level": 4,
-                "species": "SPECIES_ZIGZAGOON_GALAR"
+                "species": "SPECIES_LINOONE_GALAR"
               }
             ]
           },

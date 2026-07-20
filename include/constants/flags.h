@@ -129,12 +129,13 @@
 // #define FLAG_MOSSDEEP_GYM_SWITCH_2           0x65 //
 // #define FLAG_MOSSDEEP_GYM_SWITCH_3           0x66 //
 // #define FLAG_MOSSDEEP_GYM_SWITCH_4           0x67 //
+// #define FLAG_UNUSED_0x068                    0x68  // Unused Flag
 #define FLAG_DEXNAV_SEARCHING                0x64 // Searching with Dexnav
 #define FLAG_DEXNAV_GET                      0x65 // Dexnav obtained
 #define FLAG_DEXNAV_DETECTOR_MODE            0x66 // In Dexnav detector mode
-#define FLAG_MOSSDEEP_GYM_SWITCH_4           0x67 //
 
-#define FLAG_UNUSED_0x068                    0x68  // Unused Flag
+#define FLAG_DYN_LVL_NO_DEVOLVE              0x67 // Disable devolveing wild/trainer pokémon if they're underleveled
+#define FLAG_DYN_LVL_NO_LEVELUP              0x68 // Disable raising wild/trainer pokémon levels
 
 #define FLAG_OCEANIC_MUSEUM_MET_REPORTER     0x69
 #define FLAG_RECEIVED_HM_STRENGTH            0x6A
