@@ -272,7 +272,7 @@ static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCGFX_U32("g
 #define MAX_SEARCH_PARAM_CURSOR_POS  (MAX_SEARCH_PARAM_ON_SCREEN - 1)
 
 #define MAX_MONS_ON_SCREEN 4
-#define MAX_EVOLUTION_ICONS 8
+#define MAX_EVOLUTION_ICONS 9
 
 #define LIST_SCROLL_STEP         16
 
@@ -517,7 +517,7 @@ static u8 PrintCryScreenSpeciesName(u8, u16, u8, u8);
 static void PrintDecimalNum(u8 windowId, u16 num, u8 left, u8 top);
 static u16 CreateMonSpriteFromNationalDexNumberHGSS(u16 nationalNum, s16 x, s16 y, u16 paletteSlot);
 static u16 CreateSizeScreenTrainerPic(u16, s16, s16, s8);
-static u16 GetNextPosition(u8, u16, u16, u16);
+static u16 GetNextPosition(u8, u16, u16, u16, u16);
 static u8 LoadSearchMenu(void);
 static void Task_LoadSearchMenu(u8);
 static void Task_SwitchToSearchMenuTopBar(u8);
@@ -572,7 +572,8 @@ static void Task_LoadEvolutionScreen(u8 taskId);
 static void Task_HandleEvolutionScreenInput(u8 taskId);
 static void Task_SwitchScreensFromEvolutionScreen(u8 taskId);
 static void Task_ExitEvolutionScreen(u8 taskId);
-static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines);
+// static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines);
+static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species);
 static u8 PrintPreEvolutions(u8 taskId, enum Species species);
 //Stat bars on scrolling screens
 static void TryDestroyStatBars(void);
@@ -2153,8 +2154,8 @@ static void Task_HandlePokedexInput(u8 taskId)
         }
         else if (JOY_NEW(START_BUTTON))
         {
-            TryDestroyStatBars();
-            TryDestroyStatBarsBg();
+            // TryDestroyStatBars();
+            // TryDestroyStatBarsBg();
             sPokedexView->menuY = 0;
             sPokedexView->menuIsOpen = TRUE;
             sPokedexView->menuCursorPos = 0;
@@ -2188,15 +2189,13 @@ static void Task_HandlePokedexInput(u8 taskId)
             sPokedexView->selectedPokemon = TryDoPokedexScroll(sPokedexView->selectedPokemon, 0xE);
             if (sPokedexView->scrollTimer)
                 gTasks[taskId].func = Task_WaitForScroll;
-            else if (!sPokedexView->scrollTimer && !sPokedexView->scrollSpeed &&sPokedexView->justScrolled)
-                CreateStatBars(&sPokedexView->pokedexList[sPokedexView->selectedPokemon]);
         }
     }
 }
 
 static void Task_WaitForScroll(u8 taskId)
 {
-    TryDestroyStatBars();
+    // TryDestroyStatBars();
     if (UpdateDexListScroll(sPokedexView->scrollDirection, sPokedexView->scrollMonIncrement, sPokedexView->maxScrollTimer))
         gTasks[taskId].func = Task_HandlePokedexInput;
 }
@@ -2884,14 +2883,13 @@ static u16 TryDoPokedexScroll(u16 selectedMon, u16 ignored)
 {
     u8 scrollTimer;
     u8 scrollMonIncrement;
-    u8 i;
     u16 startingPos;
     u8 scrollDir = 0;
 
     if (JOY_HELD(DPAD_UP) && (selectedMon > 0))
     {
         scrollDir = 1;
-        selectedMon = GetNextPosition(1, selectedMon, 0, sPokedexView->pokemonListCount - 1);
+        selectedMon = GetNextPosition(1, selectedMon, 1, 0, sPokedexView->pokemonListCount - 1);
         CreateScrollingPokemonSprite(1, selectedMon);
         CreateMonListEntry(1, selectedMon, ignored);
         sPokedexView->justScrolled = TRUE;
@@ -2900,29 +2898,50 @@ static u16 TryDoPokedexScroll(u16 selectedMon, u16 ignored)
     else if (JOY_HELD(DPAD_DOWN) && (selectedMon < sPokedexView->pokemonListCount - 1))
     {
         scrollDir = 2;
-        selectedMon = GetNextPosition(0, selectedMon, 0, sPokedexView->pokemonListCount - 1);
+        selectedMon = GetNextPosition(0, selectedMon, 1, 0, sPokedexView->pokemonListCount - 1);
         CreateScrollingPokemonSprite(2, selectedMon);
         CreateMonListEntry(2, selectedMon, ignored);
         sPokedexView->justScrolled = TRUE;
         PlaySE(SE_DEX_SCROLL);
     }
-    else if (JOY_NEW(DPAD_LEFT) && (selectedMon > 0))
+    else if (JOY_HELD(DPAD_LEFT) && (selectedMon > 0))
     {
+        scrollDir = 3;
         startingPos = selectedMon;
-
-        for (i = 0; i < 7; i++)
-            selectedMon = GetNextPosition(1, selectedMon, 0, sPokedexView->pokemonListCount - 1);
+		selectedMon = GetNextPosition(1, selectedMon, 10, 0, sPokedexView->pokemonListCount - 1);
         sPokedexView->pokeBallRotation += 16 * (selectedMon - startingPos);
         ClearMonSprites();
         CreateMonSpritesAtPos(selectedMon, 0xE);
         sPokedexView->justScrolled = TRUE;
         PlaySE(SE_DEX_PAGE);
     }
-    else if (JOY_NEW(DPAD_RIGHT) && (selectedMon < sPokedexView->pokemonListCount - 1))
+    else if (JOY_HELD(DPAD_RIGHT) && (selectedMon < sPokedexView->pokemonListCount - 1))
     {
+        scrollDir = 3;
         startingPos = selectedMon;
-        for (i = 0; i < 7; i++)
-            selectedMon = GetNextPosition(0, selectedMon, 0, sPokedexView->pokemonListCount - 1);
+		selectedMon = GetNextPosition(0, selectedMon, 10, 0, sPokedexView->pokemonListCount - 1);
+        sPokedexView->pokeBallRotation += 16 * (selectedMon - startingPos);
+        ClearMonSprites();
+        CreateMonSpritesAtPos(selectedMon, 0xE);
+        sPokedexView->justScrolled = TRUE;
+        PlaySE(SE_DEX_PAGE);
+    }
+    else if (JOY_HELD(L_BUTTON) && (selectedMon > 0))
+    {
+        scrollDir = 3;
+        startingPos = selectedMon;
+		selectedMon = GetNextPosition(1, selectedMon, 100, 0, sPokedexView->pokemonListCount - 1);
+        sPokedexView->pokeBallRotation += 16 * (selectedMon - startingPos);
+        ClearMonSprites();
+        CreateMonSpritesAtPos(selectedMon, 0xE);
+        sPokedexView->justScrolled = TRUE;
+        PlaySE(SE_DEX_PAGE);
+    }
+    else if (JOY_HELD(R_BUTTON) && (selectedMon < sPokedexView->pokemonListCount - 1))
+    {
+        scrollDir = 3;
+        startingPos = selectedMon;
+		selectedMon = GetNextPosition(0, selectedMon, 100, 0, sPokedexView->pokemonListCount - 1);
         sPokedexView->pokeBallRotation += 16 * (selectedMon - startingPos);
         ClearMonSprites();
         CreateMonSpritesAtPos(selectedMon, 0xE);
@@ -2937,16 +2956,20 @@ static u16 TryDoPokedexScroll(u16 selectedMon, u16 ignored)
         return selectedMon;
     }
 
-    scrollMonIncrement = sScrollMonIncrements[sPokedexView->scrollSpeed / 4];
-    scrollTimer = sScrollTimers[sPokedexView->scrollSpeed / 4];
-    sPokedexView->scrollTimer = scrollTimer;
-    sPokedexView->maxScrollTimer = scrollTimer;
-    sPokedexView->scrollMonIncrement = scrollMonIncrement;
-    sPokedexView->scrollDirection = scrollDir;
-    sPokedexView->pokeBallRotationStep = scrollMonIncrement / 2;
-    UpdateDexListScroll(sPokedexView->scrollDirection, sPokedexView->scrollMonIncrement, sPokedexView->maxScrollTimer);
-    if (sPokedexView->scrollSpeed < 12)
-        sPokedexView->scrollSpeed++;
+	scrollMonIncrement = sScrollMonIncrements[sPokedexView->scrollSpeed / 4];
+	scrollTimer = sScrollTimers[sPokedexView->scrollSpeed / 4];
+	if (scrollDir != 3) {
+		sPokedexView->scrollTimer = scrollTimer;
+		sPokedexView->maxScrollTimer = scrollTimer;
+		sPokedexView->scrollMonIncrement = scrollMonIncrement;
+		sPokedexView->scrollDirection = scrollDir;
+		sPokedexView->pokeBallRotationStep = scrollMonIncrement / 2;
+		UpdateDexListScroll(sPokedexView->scrollDirection, sPokedexView->scrollMonIncrement, sPokedexView->maxScrollTimer);
+	}
+	if (sPokedexView->scrollSpeed < 12)
+		sPokedexView->scrollSpeed++;
+	
+	CreateStatBars(&sPokedexView->pokedexList[selectedMon]);
     return selectedMon;
 }
 
@@ -2976,7 +2999,7 @@ static bool8 TryDoInfoScreenScroll(void)
         nextPokemon = selectedPokemon;
         while (nextPokemon != 0)
         {
-            nextPokemon = GetNextPosition(1, nextPokemon, 0, sPokedexView->pokemonListCount - 1);
+            nextPokemon = GetNextPosition(1, nextPokemon, 1, 0, sPokedexView->pokemonListCount - 1);
 
             if (sPokedexView->pokedexList[nextPokemon].seen)
             {
@@ -2999,7 +3022,7 @@ static bool8 TryDoInfoScreenScroll(void)
         nextPokemon = selectedPokemon;
         while (nextPokemon < sPokedexView->pokemonListCount - 1)
         {
-            nextPokemon = GetNextPosition(0, nextPokemon, 0, sPokedexView->pokemonListCount - 1);
+            nextPokemon = GetNextPosition(0, nextPokemon, 1, 0, sPokedexView->pokemonListCount - 1);
 
             if (sPokedexView->pokedexList[nextPokemon].seen)
             {
@@ -3459,7 +3482,7 @@ static void SpriteCB_DexListStartMenuCursor(struct Sprite *sprite)
         {
             sprite->invisible = FALSE;
             sprite->y2 = sPokedexView->menuCursorPos * 16;
-            sprite->x2 = gSineTable[(u8)sprite->data[2]] / 64;
+            sprite->x2 = -125;
             sprite->data[2] += 8;
         }
         else
@@ -4627,32 +4650,40 @@ static void FreeWindowAndBgBuffers(void)
         Free(tilemapBuffer);
 }
 
-static u16 GetNextPosition(u8 direction, u16 position, u16 min, u16 max)
-{
-    switch (direction)
-    {
-    case 1: // Up/Left
-        if (position > min)
-            position--;
-        break;
-    case 0: // Down/Right
-        if (position < max)
-            position++;
-        break;
-    case 3: // Up/Left with loop (unused)
-        if (position > min)
-            position--;
-        else
-            position = max;
-        break;
-    case 2: // Down/Right with loop (unused)
-        if (position < max)
-            position++;
-        else
-            position = min;
-        break;
-    }
-    return position;
+static u16 GetNextPosition(u8 direction, u16 position, u16 amount, u16 min, u16 max) {
+	s32 result = position;
+	switch (direction) {
+		case 0: // Down/Right
+		if (position < max) {
+			result += amount;
+			if (result > max) result = max;
+		}
+		break;
+		
+		case 1: // Up/Left
+		if (position > min) {
+			result -= amount;
+			if (result < min) result = min;
+		}
+		break;
+		
+		case 2: // Down/Right with loop (unused)
+		if (position < max) {
+			result += amount;
+			if (result > max) result = max;
+		}
+		else result = min;
+		break;
+		
+		case 3: // Up/Left with loop (unused)
+		if (position > min) {
+			result -= amount;
+			if (result < min) result = min;
+		}
+		else result = max;
+		break;
+	}
+	return result;
 }
 
 
@@ -6013,12 +6044,8 @@ static void Task_LoadEvolutionScreen(u8 taskId)
         break;
     case 4:
     {
-        u32 alreadyPrintedIcons[MAX_EVOLUTION_ICONS] = {0};
-        u32 depth = sPokedexView->numPreEvolutions;
-        u32 iconDepth = depth;
-        //Print evo info and icons
         gTasks[taskId].data[3] = 0;
-        PrintEvolutionTargetSpeciesAndMethod(taskId, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum), 0, &depth, alreadyPrintedIcons, &iconDepth, 0);
+        PrintEvolutionTargetSpeciesAndMethod(taskId, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum));
         LoadSpritePalette(&gSpritePalette_Arrow);
         TryLoadDarkModeArrowPalette();
         GetSeenFlagTargetSpecies();
@@ -6189,15 +6216,14 @@ static void HandleTargetSpeciesPrintText(enum Species targetSpecies, u32 base_x,
     PrintInfoScreenTextSmall(gStringVar3, fontId, base_x, base_y + base_y_offset*base_i); //evolution mon name
 }
 
-static void HandleTargetSpeciesPrintIcon(u8 taskId, enum Species targetSpecies, u8 base_i, u8 iterations)
-{
-    u32 personality = GetPokedexMonPersonality(targetSpecies);
-    LoadMonIconPalettePersonality(targetSpecies, personality); //Loads pallete for current mon
-    if (iterations > 6) // Print icons closer to each other if there are many evolutions
-        gTasks[taskId].data[4+base_i] = CreateMonIcon(targetSpecies, SpriteCB_MonIcon, 45 + 26*base_i, 31, 4, personality);
-    else
-        gTasks[taskId].data[4+base_i] = CreateMonIcon(targetSpecies, SpriteCB_MonIcon, 50 + 32*base_i, 31, 4, personality);
-    gSprites[gTasks[taskId].data[4+base_i]].oam.priority = 0;
+static void HandleTargetSpeciesPrintIcon(u8 taskId, enum Species targetSpecies, u8 current, u8 total) {
+	u32 personality = GetPokedexMonPersonality(targetSpecies);
+	LoadMonIconPalettePersonality(targetSpecies, personality); //Loads pallete for current mon
+	
+	int width = total == 0 ? 32 : min(32, (160 - 32 * sPokedexView->numPreEvolutions) / (total - 1));
+	gTasks[taskId].data[4 + current] = CreateMonIcon(targetSpecies, SpriteCB_MonIcon, 64 + (32 * sPokedexView->numPreEvolutions) + width * current, 31, 4, personality);
+	
+	gSprites[gTasks[taskId].data[4 + current]].oam.priority = 0;
 }
 
 static void CreateCaughtBallEvolutionScreen(enum Species targetSpecies, u8 x, u8 y, u16 unused)
@@ -6426,399 +6452,461 @@ bool32 IsItemSweet(enum Item item)
     return item >= ITEM_STRAWBERRY_SWEET && item <= ITEM_RIBBON_SWEET;
 }
 
-static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines)
-{
-    int i;
-    u32 depth_x = 4;
-    u32 depth_offset = 8 * (depth + 1);
-    int fontId;
-    enum Species targetSpecies = 0;
-    bool8 left = TRUE;
-    u32 base_x = 21;
-    u32 base_y = 51;
-    u32 base_y_offset = 9;
-    u32 times = 0;
-    u32 arg; // shorthand for some of the more mathy evolutions
-    const struct Evolution *evolutions = GetSpeciesEvolutions(species);
-
-    if (sPokedexView->sEvoScreenData.isMega)
-        return;
-
-    StringCopy(gStringVar1, GetSpeciesName(species));
-
-    sPokedexView->sEvoScreenData.arrowSpriteDist[depth] = numLines;
-
-    //If there are no evolutions print text and return
-    if (evolutions == NULL)
-    {
-        if (depth == 0)
-        {
-            StringExpandPlaceholders(gStringVar4, sText_EVO_NONE);
-            PrintInfoScreenTextSmall(gStringVar4, FONT_SMALL, base_x-7-7, base_y + base_y_offset*(*depth_i) + numLines);
-        }
-        return;
-    }
-
-    //Calculate number of possible direct evolutions (e.g. Eevee has 5 but torchic has 1)
-    for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
-        times += 1;
-
-    if (times > 9 && species == SPECIES_MILCERY)
-        times = 9;
-    else if (times > 10)
-        times = 10;
-
-    gTasks[taskId].data[3] = times;
-    sPokedexView->sEvoScreenData.numAllEvolutions += times;
-
-    //If there are evolutions find out which and print them 1 by 1
-    for (i = 0; i < times; i++)
-    {
-        targetSpecies = evolutions[i].targetSpecies;
-        if (!IsSpeciesEnabled(targetSpecies))
-            continue;
-
-        left = !left;
-
-        bool32 isAlcremie = IsSpeciesAlcremie(targetSpecies);
-
-        u32 speciesNameWidthInChars = GetSpeciesNameWidthInChars(GetSpeciesName(targetSpecies));
-        u32 speciesNameCharWidth = GetFontAttribute(GetSpeciesNameFontId(speciesNameWidthInChars), FONTATTR_MAX_LETTER_WIDTH);
-
-        u32 speciesNameWidth = (speciesNameWidthInChars * speciesNameCharWidth);
-        u32 base_x_offset = speciesNameWidth + base_x + depth_offset; // for evo method info
-        u32 maxScreenWidth = 230 - base_x_offset;
-
-        sPokedexView->sEvoScreenData.targetSpecies[*depth_i] = targetSpecies;
-        CreateCaughtBallEvolutionScreen(targetSpecies, base_x + depth_x*depth-9, base_y + base_y_offset*(*depth_i) + numLines, 0);
-        HandleTargetSpeciesPrintText(targetSpecies, base_x + depth_x*depth, base_y, base_y_offset + numLines, *depth_i); //evolution mon name
-
-        for (u32 j = 0; j < MAX_EVOLUTION_ICONS; j++)
-        {
-            if (alreadyPrintedIcons[j] == targetSpecies)
-                break;
-            if (alreadyPrintedIcons[j] == SPECIES_NONE)
-            {
-                HandleTargetSpeciesPrintIcon(taskId, targetSpecies, *icon_depth_i, times);
-                alreadyPrintedIcons[j] = targetSpecies;
-                (*icon_depth_i)++;
-                break;
-            }
-        }
-
-        bool32 caught = GetSetPokedexFlag(SpeciesToNationalPokedexNum(targetSpecies), FLAG_GET_CAUGHT);
-        if (HGSS_HIDE_UNOWNED_EVOLUTION_METHODS == TRUE && !caught)
-        {
-            StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Unknown"));
-        }
-        else
-        {
-            switch ((enum EvolutionMethods)evolutions[i].method)
-            {
-            case EVO_SCRIPT_TRIGGER:
-            case EVO_NONE:
-                StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Unknown"));
-                break;
-            case EVO_LEVEL:
-            case EVO_LEVEL_BATTLE_ONLY:
-                StringCopy(gStringVar4, COMPOUND_STRING("{LV}{UP_ARROW}"));
-                if (evolutions[i].param > 1)
-                {
-                    ConvertIntToDecimalStringN(gStringVar2, evolutions[i].param, STR_CONV_MODE_LEFT_ALIGN, EVO_SCREEN_LVL_DIGITS); //level
-                    StringAppend(gStringVar4, gStringVar2);
-                }
-                if ((enum EvolutionMethods)evolutions[i].method == EVO_LEVEL_BATTLE_ONLY)
-                    StringAppend(gStringVar4, COMPOUND_STRING(", in battle"));
-                break;
-            case EVO_TRADE:
-                StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Trading"));
-                break;
-            case EVO_ITEM:
-                CopyItemName(evolutions[i].param, gStringVar2);
-                StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("{STR_VAR_2} is used"));
-                break;
-            case EVO_SPLIT_FROM_EVO:
-                StringCopy(gStringVar4, COMPOUND_STRING("Splits from "));
-                StringAppend(gStringVar4, GetSpeciesName(evolutions[i].param)); //mon name
-                break;
-            case EVO_BATTLE_END:
-                StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("End battle"));
-                break;
-            case EVO_SPIN:
-                StringCopy(gStringVar4, COMPOUND_STRING("Spin "));
-                if (evolutions[i].param == SPIN_CW_SHORT)
-                    StringAppend(gStringVar4, COMPOUND_STRING("CW <5s"));
-                else if (evolutions[i].param == SPIN_CW_LONG)
-                    StringAppend(gStringVar4, COMPOUND_STRING("CW >5s"));
-                else if (evolutions[i].param == SPIN_CCW_SHORT)
-                    StringAppend(gStringVar4, COMPOUND_STRING("CCW <5s"));
-                else if (evolutions[i].param == SPIN_CCW_LONG)
-                    StringAppend(gStringVar4, COMPOUND_STRING("CCW >5s"));
-                else
-                    StringAppend(gStringVar4, COMPOUND_STRING("CW/CCW >10s"));
-                break;
-            }//Switch end
-
-            // Check for additional conditions. Skips if there's no additional conditions.
-            for (u32 j = 0; evolutions[i].params != NULL && evolutions[i].params[j].condition != CONDITIONS_END; j++)
-            {
-                if (j == 0)
-                {
-                    StringAppend(gStringVar4, COMPOUND_STRING(", "));
-                }
-
-                enum EvolutionConditions condition = evolutions[i].params[j].condition;
-                switch (condition)
-                {
-                // Gen 2
-                case IF_GENDER:
-                    switch (evolutions[i].params[j].arg1)
-                    {
-                    case MON_MALE:   StringAppend(gStringVar4, COMPOUND_STRING("Male"));   break;
-                    case MON_FEMALE: StringAppend(gStringVar4, COMPOUND_STRING("Female")); break;
-                    }
-                    break;
-                case IF_MIN_FRIENDSHIP:
-                    StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}friendship"));
-                    break;
-                case IF_ATK_GT_DEF:
-                    StringAppend(gStringVar4, COMPOUND_STRING("Atk > Def"));
-                    break;
-                case IF_ATK_EQ_DEF:
-                    StringAppend(gStringVar4, COMPOUND_STRING("Atk = Def"));
-                    break;
-                case IF_ATK_LT_DEF:
-                    StringAppend(gStringVar4, COMPOUND_STRING("Atk < Def"));
-                    break;
-                case IF_TIME:
-                    switch (evolutions[i].params[j].arg1)
-                    {
-                    case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("Morning")); break;
-                    case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING("Day"));     break;
-                    case TIME_EVENING: StringAppend(gStringVar4, COMPOUND_STRING("Evening")); break;
-                    case TIME_NIGHT:   StringAppend(gStringVar4, COMPOUND_STRING("Night"));   break;
-                    }
-                    break;
-                case IF_NOT_TIME:
-                    switch (evolutions[i].params[j].arg1)
-                    {
-                    case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("NOT Morning")); break;
-                    case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING("NOT Day"));     break;
-                    case TIME_EVENING: StringAppend(gStringVar4, COMPOUND_STRING("NOT Evening")); break;
-                    case TIME_NIGHT:   StringAppend(gStringVar4, COMPOUND_STRING("Day"));         break; // More intuitive than "NOT Night"
-                    }
-                    break;
-                case IF_HOLD_ITEM:
-                    StringAppend(gStringVar4, COMPOUND_STRING("holds "));
-                    if (isAlcremie && IsItemSweet(evolutions[i].params[j].arg1))
-                    {
-                        StringAppend(gStringVar4, COMPOUND_STRING("Sweet")); //item
-                    }
-                    else
-                    {
-                        CopyItemName(evolutions[i].params[j].arg1, gStringVar2); //item
-                        StringAppend(gStringVar4, gStringVar2);
-                    }
-                    break;
-                // Gen 3
-                case IF_PID_UPPER_MODULO_10_GT:
-                case IF_PID_UPPER_MODULO_10_EQ:
-                case IF_PID_UPPER_MODULO_10_LT:
-                    arg = evolutions[i].params[j].arg1;
-                        if (condition == IF_PID_UPPER_MODULO_10_GT
-                            && arg < 10 && arg >= 0)
-                            arg = 9 - arg;
-                        else if (condition == IF_PID_UPPER_MODULO_10_EQ
-                             && arg < 10 && arg >= 0)
-                            arg = 1;
-                    ConvertIntToDecimalStringN(gStringVar2, arg * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
-                    StringAppend(gStringVar4, COMPOUND_STRING("random %"));
-                    StringAppend(gStringVar4, gStringVar2);
-                    break;
-                case IF_MIN_BEAUTY:
-                    StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}beauty"));
-                    break;
-                case IF_MIN_COOLNESS:
-                    StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}coolness"));
-                    break;
-                case IF_MIN_SMARTNESS:
-                    StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}smartness"));
-                    break;
-                case IF_MIN_TOUGHNESS:
-                    StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}toughness"));
-                    break;
-                case IF_MIN_CUTENESS:
-                    StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}cuteness"));
-                    break;
-                // Gen 4
-                case IF_SPECIES_IN_PARTY:
-                    StringAppend(gStringVar4, GetSpeciesName(evolutions[i].params[j].arg1)); //mon name
-                    StringAppend(gStringVar4, COMPOUND_STRING(" in party"));
-                    break;
-                case IF_IN_MAPSEC:
-                    StringAppend(gStringVar4, COMPOUND_STRING("in "));
-                    StringCopy(gStringVar2, gRegionMapEntries[evolutions[i].params[j].arg1].name);
-                    StringAppend(gStringVar4, gStringVar2);
-                    break;
-                case IF_IN_MAP:
-                    StringAppend(gStringVar4, COMPOUND_STRING("in "));
-                    GetMapName(gStringVar2, Overworld_GetMapHeaderByGroupAndId(evolutions[i].params[j].arg1 >> 8, evolutions[i].params[j].arg1 & 0xFF)->regionMapSectionId, 0);
-                    StringAppend(gStringVar4, gStringVar2);
-                    break;
-                case IF_KNOWS_MOVE:
-                    StringAppend(gStringVar4, COMPOUND_STRING("knows "));
-                    StringAppend(gStringVar4, GetMoveName(evolutions[i].params[j].arg1));
-                    break;
-                // Gen 5
-                case IF_TRADE_PARTNER_SPECIES:
-                    StringAppend(gStringVar4, COMPOUND_STRING("traded with "));
-                    StringAppend(gStringVar4, GetSpeciesName(evolutions[i].params[j].arg1));
-                    break;
-                // Gen 6
-                case IF_TYPE_IN_PARTY:
-                    StringAppend(gStringVar4, gTypesInfo[evolutions[i].params[j].arg1].name); //type name
-                    StringAppend(gStringVar4, COMPOUND_STRING("-type in party"));
-                    break;
-                case IF_WEATHER:
-                    StringAppend(gStringVar4, COMPOUND_STRING("weather "));
-                    StringAppend(gStringVar4, GetWeatherName(evolutions[i].params[j].arg1));
-                    break;
-                case IF_KNOWS_MOVE_TYPE:
-                    StringAppend(gStringVar4, gTypesInfo[evolutions[i].params[j].arg1].name);
-                    StringAppend(gStringVar4, COMPOUND_STRING(" move"));
-                    break;
-                case IF_REGION:
-                case IF_NOT_REGION:
-                {
-                    if (condition == IF_REGION)
-                        StringAppend(gStringVar4, COMPOUND_STRING("in "));
-                    else if (condition == IF_NOT_REGION)
-                        StringAppend(gStringVar4, COMPOUND_STRING("out of "));
-
-                    switch ((enum Region)evolutions[i].params[j].arg1)
-                    {
-                    case REGION_NONE:
-                    case REGIONS_COUNT:
-                        StringAppend(gStringVar4, COMPOUND_STRING("???"));
-                        break;
-                    case REGION_KANTO: StringAppend(gStringVar4, COMPOUND_STRING("Kanto")); break;
-                    case REGION_JOHTO: StringAppend(gStringVar4, COMPOUND_STRING("Johto")); break;
-                    case REGION_HOENN: StringAppend(gStringVar4, COMPOUND_STRING("Hoenn")); break;
-                    case REGION_SINNOH: StringAppend(gStringVar4, COMPOUND_STRING("Sinnoh")); break;
-                    case REGION_UNOVA: StringAppend(gStringVar4, COMPOUND_STRING("Unova")); break;
-                    case REGION_KALOS: StringAppend(gStringVar4, COMPOUND_STRING("Kalos")); break;
-                    case REGION_ALOLA: StringAppend(gStringVar4, COMPOUND_STRING("Alola")); break;
-                    case REGION_GALAR: StringAppend(gStringVar4, COMPOUND_STRING("Galar")); break;
-                    case REGION_HISUI: StringAppend(gStringVar4, COMPOUND_STRING("Hisui")); break;
-                    case REGION_PALDEA: StringAppend(gStringVar4, COMPOUND_STRING("Paldea")); break;
-                    }
-                    break;
-                }
-                // Gen 8
-                case IF_NATURE:
-                    StringCopy(gStringVar2, gNaturesInfo[evolutions[i].params[j].arg1].name);
-                    StringAppend(gStringVar4, gStringVar2);
-                    StringAppend(gStringVar4, COMPOUND_STRING(" nature"));
-                    break;
-                case IF_AMPED_NATURE:
-                    StringAppend(gStringVar4, COMPOUND_STRING("amped natures"));
-                    break;
-                case IF_LOW_KEY_NATURE:
-                    StringAppend(gStringVar4, COMPOUND_STRING("low-Key natures"));
-                    break;
-                case IF_RECOIL_DAMAGE_GE:
-                    StringAppend(gStringVar4, COMPOUND_STRING("takes >= "));
-                    ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
-                    StringAppend(gStringVar4, gStringVar2);
-                    StringAppend(gStringVar4, COMPOUND_STRING(" recoil dmg"));
-                    break;
-                case IF_CURRENT_DAMAGE_GE:
-                    ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
-                    StringAppend(gStringVar4, gStringVar2);
-                    StringAppend(gStringVar4, COMPOUND_STRING(" current dmg"));
-                    break;
-                case IF_CRITICAL_HITS_GE:
-                    ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 2);
-                    StringAppend(gStringVar4, gStringVar2);
-                    StringAppend(gStringVar4, COMPOUND_STRING(" critical hits"));
-                    break;
-                case IF_USED_MOVE_X_TIMES:
-                    StringAppend(gStringVar4, COMPOUND_STRING("use move "));
-                    StringAppend(gStringVar4, GetMoveName(evolutions[i].params[j].arg1));
-                    StringAppend(gStringVar4, COMPOUND_STRING(" "));
-                    ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg2, STR_CONV_MODE_LEFT_ALIGN, 3);
-                    StringAppend(gStringVar4, gStringVar2);
-                    StringAppend(gStringVar4, COMPOUND_STRING(" times"));
-                    break;
-                // Gen 9
-                case IF_DEFEAT_X_WITH_ITEMS:
-                    StringAppend(gStringVar4, COMPOUND_STRING("defeat "));
-                    ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg3, STR_CONV_MODE_LEFT_ALIGN, 3);
-                    StringAppend(gStringVar4, gStringVar2);
-                    StringAppend(gStringVar4, COMPOUND_STRING(" "));
-                    StringAppend(gStringVar4, GetSpeciesName(evolutions[i].params[j].arg1));
-                    StringAppend(gStringVar4, COMPOUND_STRING(" that hold "));
-                    CopyItemName(evolutions[i].params[j].arg2, gStringVar2);
-                    StringAppend(gStringVar4, gStringVar2);
-                    break;
-                case IF_PID_MODULO_100_GT:
-                case IF_PID_MODULO_100_EQ:
-                case IF_PID_MODULO_100_LT:
-                    arg = evolutions[i].params[j].arg1;
-                        if (condition == IF_PID_MODULO_100_GT
-                            && arg < 100 && arg >= 0)
-                            arg = 99 - arg;
-                        else if (condition == IF_PID_MODULO_100_EQ
-                                 && arg < 100 && arg >= 0)
-                            arg = 1;
-                    ConvertIntToDecimalStringN(gStringVar2, arg, STR_CONV_MODE_LEFT_ALIGN, 3);
-                    StringAppend(gStringVar4, COMPOUND_STRING("%"));
-                    StringAppend(gStringVar4, gStringVar2);
-                    break;
-                case IF_MIN_OVERWORLD_STEPS:
-                    StringAppend(gStringVar4, COMPOUND_STRING("after "));
-                    ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg1, STR_CONV_MODE_LEFT_ALIGN, 4);
-                    StringAppend(gStringVar4, gStringVar2);
-                    StringAppend(gStringVar4, COMPOUND_STRING(" steps"));
-                    break;
-                case IF_BAG_ITEM_COUNT:
-                    ConvertIntToDecimalStringN(gStringVar2, evolutions[i].params[j].arg2, STR_CONV_MODE_LEFT_ALIGN, 3);
-                    StringAppend(gStringVar4, gStringVar2);
-                    StringAppend(gStringVar4, COMPOUND_STRING(" "));
-                    CopyItemNameHandlePlural(evolutions[i].params[j].arg1, gStringVar2, evolutions[i].params[j].arg2);
-                    StringAppend(gStringVar4, gStringVar2);
-                    StringAppend(gStringVar4, COMPOUND_STRING(" in bag"));
-                    break;
-                case CONDITIONS_END:
-                    break;
-                }
-
-                if (evolutions[i].params[j+1].condition != CONDITIONS_END)
-                {
-                    StringAppend(gStringVar4, COMPOUND_STRING(", "));
-                }
-            }
-        }
-
-        if (isAlcremie)
-            fontId = FONT_SMALL_NARROWER;
-        else
-            fontId = GetFontIdToFit(gStringVar4, FONT_SMALL, 0, maxScreenWidth);
-
-        u32 fontHeight = GetFontAttribute(fontId, FONTATTR_MAX_LETTER_HEIGHT);
-
-        StringAppend(gStringVar4, COMPOUND_STRING("."));
-        BreakStringAutomatic(gStringVar4, maxScreenWidth, MAX_EVO_METHOD_LINES, fontId, HIDE_SCROLL_PROMPT);
-
-        PrintInfoScreenTextSmall(gStringVar4, fontId, base_x_offset, base_y + base_y_offset*(*depth_i) + numLines); //Print actual instructions
-        (*depth_i)++;
-
-        numLines = CountLineBreaks(gStringVar4) * fontHeight;
-
-        sPokedexView->sEvoScreenData.arrowSpriteDist[depth + 1] = numLines;
-
-        PrintEvolutionTargetSpeciesAndMethod(taskId, targetSpecies, depth+1, depth_i, alreadyPrintedIcons, icon_depth_i, numLines);
-    }//For loop end
+static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species) {
+	if (sPokedexView->sEvoScreenData.isMega) return;
+	
+	#define NUM_PRE_EVOS sPokedexView->numPreEvolutions
+	#define BASE_X 21
+	#define BASE_Y 51
+	#define BASE_Y_OFFSET 9
+	#define DEPTH_X 4
+	
+	const struct Evolution *evolutions = GetSpeciesEvolutions(species);
+	
+	//If there are no evolutions print text and return
+	if (evolutions == NULL) {
+		StringExpandPlaceholders(gStringVar4, sText_EVO_NONE);
+		PrintInfoScreenTextSmall(gStringVar4, FONT_SMALL, BASE_X - 14, BASE_Y + BASE_Y_OFFSET * NUM_PRE_EVOS);
+		return;
+	}
+	
+	u32 evos[MAX_EVOLUTION_ICONS] = {0};
+	u32 num_lines = 0, methods = 0, x_offset, max_width, arg;
+	bool32 isAlcremie;
+	enum Species target_species;
+	int fontId, i, j, k;
+	u8 depth = 0;
+	
+	StringCopy(gStringVar1, GetSpeciesName(species));
+	
+	// Count evolution methods and list unique evolutions, in national dex order
+	for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++) {
+		methods++;
+		
+		target_species = evolutions[i].targetSpecies;
+		if (!IsSpeciesEnabled(target_species)) continue;
+		
+		for (j = 0; j < MAX_EVOLUTION_ICONS; j++) {
+			if (evos[j] == target_species) break;
+			
+			if (evos[j] == SPECIES_NONE) {
+				evos[j] = target_species;
+				depth++;
+				break;
+			}
+			
+			if (evos[j] > target_species) {
+				arg = evos[j];
+				evos[j] = target_species;
+				target_species = arg;
+			}
+		}
+	}
+	
+	// Print icons
+	for (i = depth; depth > 0; depth--) {
+		HandleTargetSpeciesPrintIcon(taskId, evos[depth - 1], depth - 1, i);
+	}
+	
+	if (methods > 9 && species == SPECIES_MILCERY) methods = 9;
+	else if (methods > 10) methods = 10;
+	
+	gTasks[taskId].data[3] = methods;
+	sPokedexView->sEvoScreenData.numAllEvolutions += methods;
+	depth = 0;
+	
+	for (i = 0; i < MAX_EVOLUTION_ICONS; i++) {
+		if (evos[i] == SPECIES_NONE) break;
+		
+		target_species = evos[i];
+		isAlcremie = IsSpeciesAlcremie(target_species);
+		
+		j = GetSpeciesNameWidthInChars(GetSpeciesName(target_species));
+		x_offset = (j * GetFontAttribute(GetSpeciesNameFontId(j), FONTATTR_MAX_LETTER_WIDTH)) + BASE_X + 8;
+		max_width = 230 - x_offset;
+		
+		if (HGSS_HIDE_UNOWNED_EVOLUTION_METHODS == TRUE && !GetSetPokedexFlag(SpeciesToNationalPokedexNum(target_species), FLAG_GET_CAUGHT)) {
+			StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Unknown."));
+			
+			fontId = GetFontIdToFit(gStringVar4, FONT_SMALL, 0, max_width);
+			PrintInfoScreenTextSmall(gStringVar4, fontId, x_offset, BASE_Y + BASE_Y_OFFSET * (NUM_PRE_EVOS + depth) + num_lines);
+			
+			num_lines = CountLineBreaks(gStringVar4) * GetFontAttribute(fontId, FONTATTR_MAX_LETTER_HEIGHT);
+			depth++;
+			
+			continue;
+		}
+		
+		for (j = 0; j < methods; j++) {
+			if (evolutions[j].targetSpecies != target_species) continue;
+			
+			sPokedexView->sEvoScreenData.arrowSpriteDist[depth] = num_lines;
+			
+			// Print evolution species name
+			sPokedexView->sEvoScreenData.targetSpecies[NUM_PRE_EVOS + depth] = target_species;
+			CreateCaughtBallEvolutionScreen(target_species, BASE_X - 9, BASE_Y + BASE_Y_OFFSET * (NUM_PRE_EVOS + depth) + num_lines, 0);
+			HandleTargetSpeciesPrintText(target_species, BASE_X, BASE_Y, BASE_Y_OFFSET + num_lines, NUM_PRE_EVOS + depth);
+			
+			// Print evolution methods
+			switch ((enum EvolutionMethods)evolutions[j].method) {
+				case EVO_SCRIPT_TRIGGER:
+				case EVO_NONE:
+				StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Unknown"));
+				break;
+				
+				case EVO_LEVEL:
+				case EVO_LEVEL_BATTLE_ONLY:
+				StringCopy(gStringVar4, COMPOUND_STRING("{LV}{UP_ARROW}"));
+				if (evolutions[j].param > 1) {
+					ConvertIntToDecimalStringN(gStringVar2, evolutions[j].param, STR_CONV_MODE_LEFT_ALIGN, EVO_SCREEN_LVL_DIGITS); //level
+					StringAppend(gStringVar4, gStringVar2);
+				}
+				if ((enum EvolutionMethods)evolutions[j].method == EVO_LEVEL_BATTLE_ONLY)
+					StringAppend(gStringVar4, COMPOUND_STRING(", in battle"));
+				break;
+				
+				case EVO_TRADE:
+				StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Trading"));
+				break;
+				
+				case EVO_ITEM:
+				CopyItemName(evolutions[j].param, gStringVar2);
+				StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("{STR_VAR_2} is used"));
+				break;
+				
+				case EVO_SPLIT_FROM_EVO:
+				StringCopy(gStringVar4, COMPOUND_STRING("Splits from "));
+				StringAppend(gStringVar4, GetSpeciesName(evolutions[j].param)); //mon name
+				break;
+				
+				case EVO_BATTLE_END:
+				StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("End battle"));
+				break;
+				
+				case EVO_SPIN:
+				StringCopy(gStringVar4, COMPOUND_STRING("Spin "));
+				if (evolutions[j].param == SPIN_CW_SHORT) StringAppend(gStringVar4, COMPOUND_STRING("CW <5s"));
+				else if (evolutions[j].param == SPIN_CW_LONG) StringAppend(gStringVar4, COMPOUND_STRING("CW >5s"));
+				else if (evolutions[j].param == SPIN_CCW_SHORT) StringAppend(gStringVar4, COMPOUND_STRING("CCW <5s"));
+				else if (evolutions[j].param == SPIN_CCW_LONG) StringAppend(gStringVar4, COMPOUND_STRING("CCW >5s"));
+				else StringAppend(gStringVar4, COMPOUND_STRING("CW/CCW >10s"));
+				break;
+			}
+			
+			// Print additional conditions, if any
+			if (evolutions[j].params != NULL) {
+				for (k = 0; evolutions[j].params[k].condition != CONDITIONS_END; k++) {
+					StringAppend(gStringVar4, COMPOUND_STRING(", "));
+					
+					enum EvolutionConditions condition = evolutions[j].params[k].condition;
+					switch (condition) {
+						default:
+						break;
+						
+						// Gen 2
+						case IF_GENDER:
+						if (evolutions[j].params[k].arg1 == MON_MALE) StringAppend(gStringVar4, COMPOUND_STRING("Male"));
+						else if (evolutions[j].params[k].arg1 == MON_FEMALE) StringAppend(gStringVar4, COMPOUND_STRING("Female"));
+						break;
+						
+						case IF_MIN_FRIENDSHIP:
+						StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}friendship"));
+						break;
+						
+						case IF_ATK_GT_DEF:
+						StringAppend(gStringVar4, COMPOUND_STRING("Atk > Def"));
+						break;
+						
+						case IF_ATK_EQ_DEF:
+						StringAppend(gStringVar4, COMPOUND_STRING("Atk = Def"));
+						break;
+						
+						case IF_ATK_LT_DEF:
+						StringAppend(gStringVar4, COMPOUND_STRING("Atk < Def"));
+						break;
+						
+						case IF_TIME:
+						switch (evolutions[j].params[k].arg1) {
+							case TIME_MORNING:
+							StringAppend(gStringVar4, COMPOUND_STRING("Morning"));
+							break;
+							
+							case TIME_DAY:
+							StringAppend(gStringVar4, COMPOUND_STRING("Day"));
+							break;
+							
+							case TIME_EVENING:
+							StringAppend(gStringVar4, COMPOUND_STRING("Evening"));
+							break;
+							
+							case TIME_NIGHT:
+							StringAppend(gStringVar4, COMPOUND_STRING("Night"));
+							break;
+						}
+						break;
+						
+						case IF_NOT_TIME:
+						switch (evolutions[j].params[k].arg1) {
+							case TIME_MORNING:
+							StringAppend(gStringVar4, COMPOUND_STRING("NOT Morning"));
+							break;
+							
+							case TIME_DAY:
+							StringAppend(gStringVar4, COMPOUND_STRING("NOT Day"));
+							break;
+							
+							case TIME_EVENING:
+							StringAppend(gStringVar4, COMPOUND_STRING("NOT Evening"));
+							break;
+							
+							case TIME_NIGHT:
+							StringAppend(gStringVar4, COMPOUND_STRING("Day"));
+							break;
+						}
+						break;
+						
+						case IF_HOLD_ITEM:
+						StringAppend(gStringVar4, COMPOUND_STRING("holds "));
+						if (isAlcremie && IsItemSweet(evolutions[j].params[k].arg1)) StringAppend(gStringVar4, COMPOUND_STRING("Sweet")); //item
+						else {
+							CopyItemName(evolutions[j].params[k].arg1, gStringVar2); //item
+							StringAppend(gStringVar4, gStringVar2);
+						}
+						break;
+						
+						// Gen 3
+						case IF_PID_UPPER_MODULO_10_GT:
+						case IF_PID_UPPER_MODULO_10_EQ:
+						case IF_PID_UPPER_MODULO_10_LT:
+						arg = evolutions[j].params[k].arg1;
+						if (condition == IF_PID_UPPER_MODULO_10_GT && arg < 10 && arg >= 0) arg = 9 - arg;
+						else if (condition == IF_PID_UPPER_MODULO_10_EQ && arg < 10 && arg >= 0) arg = 1;
+						ConvertIntToDecimalStringN(gStringVar2, arg * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
+						StringAppend(gStringVar4, COMPOUND_STRING("random %"));
+						StringAppend(gStringVar4, gStringVar2);
+						break;
+						
+						case IF_MIN_BEAUTY:
+						StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}beauty"));
+						break;
+						
+						case IF_MIN_COOLNESS:
+						StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}coolness"));
+						break;
+						
+						case IF_MIN_SMARTNESS:
+						StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}smartness"));
+						break;
+						
+						case IF_MIN_TOUGHNESS:
+						StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}toughness"));
+						break;
+						
+						case IF_MIN_CUTENESS:
+						StringAppend(gStringVar4, COMPOUND_STRING("{UP_ARROW_2}cuteness"));
+						break;
+						
+						// Gen 4
+						case IF_SPECIES_IN_PARTY:
+						StringAppend(gStringVar4, GetSpeciesName(evolutions[j].params[k].arg1)); //mon name
+						StringAppend(gStringVar4, COMPOUND_STRING(" in party"));
+						break;
+						
+						case IF_IN_MAPSEC:
+						StringAppend(gStringVar4, COMPOUND_STRING("in "));
+						StringCopy(gStringVar2, gRegionMapEntries[evolutions[j].params[k].arg1].name);
+						StringAppend(gStringVar4, gStringVar2);
+						break;
+						
+						case IF_IN_MAP:
+						StringAppend(gStringVar4, COMPOUND_STRING("in "));
+						GetMapName(gStringVar2, Overworld_GetMapHeaderByGroupAndId(evolutions[j].params[k].arg1 >> 8, evolutions[j].params[k].arg1 & 0xFF)->regionMapSectionId, 0);
+						StringAppend(gStringVar4, gStringVar2);
+						break;
+						
+						case IF_KNOWS_MOVE:
+						StringAppend(gStringVar4, COMPOUND_STRING("knows "));
+						StringAppend(gStringVar4, GetMoveName(evolutions[j].params[k].arg1));
+						break;
+						
+						// Gen 5
+						case IF_TRADE_PARTNER_SPECIES:
+						StringAppend(gStringVar4, COMPOUND_STRING("traded with "));
+						StringAppend(gStringVar4, GetSpeciesName(evolutions[j].params[k].arg1));
+						break;
+						
+						// Gen 6
+						case IF_TYPE_IN_PARTY:
+						StringAppend(gStringVar4, gTypesInfo[evolutions[j].params[k].arg1].name); //type name
+						StringAppend(gStringVar4, COMPOUND_STRING("-type in party"));
+						break;
+						
+						case IF_WEATHER:
+						StringAppend(gStringVar4, COMPOUND_STRING("weather "));
+						StringAppend(gStringVar4, GetWeatherName(evolutions[j].params[k].arg1));
+						break;
+						
+						case IF_KNOWS_MOVE_TYPE:
+						StringAppend(gStringVar4, gTypesInfo[evolutions[j].params[k].arg1].name);
+						StringAppend(gStringVar4, COMPOUND_STRING(" move"));
+						break;
+						
+						case IF_REGION:
+						case IF_NOT_REGION:
+						if (condition == IF_REGION) StringAppend(gStringVar4, COMPOUND_STRING("in "));
+						else if (condition == IF_NOT_REGION) StringAppend(gStringVar4, COMPOUND_STRING("out of "));
+						
+						switch ((enum Region)evolutions[j].params[k].arg1) {
+							case REGION_NONE:
+							case REGIONS_COUNT:
+							StringAppend(gStringVar4, COMPOUND_STRING("???"));
+							break;
+							
+							case REGION_KANTO:
+							StringAppend(gStringVar4, COMPOUND_STRING("Kanto"));
+							break;
+							
+							case REGION_JOHTO:
+							StringAppend(gStringVar4, COMPOUND_STRING("Johto"));
+							break;
+							
+							case REGION_HOENN:
+							StringAppend(gStringVar4, COMPOUND_STRING("Hoenn"));
+							break;
+							
+							case REGION_SINNOH:
+							StringAppend(gStringVar4, COMPOUND_STRING("Sinnoh"));
+							break;
+							
+							case REGION_UNOVA:
+							StringAppend(gStringVar4, COMPOUND_STRING("Unova"));
+							break;
+							
+							case REGION_KALOS:
+							StringAppend(gStringVar4, COMPOUND_STRING("Kalos"));
+							break;
+							
+							case REGION_ALOLA:
+							StringAppend(gStringVar4, COMPOUND_STRING("Alola"));
+							break;
+							
+							case REGION_GALAR:
+							StringAppend(gStringVar4, COMPOUND_STRING("Galar"));
+							break;
+							
+							case REGION_HISUI:
+							StringAppend(gStringVar4, COMPOUND_STRING("Hisui"));
+							break;
+							
+							case REGION_PALDEA:
+							StringAppend(gStringVar4, COMPOUND_STRING("Paldea"));
+							break;
+						}
+						break;
+						
+						// Gen 8
+						case IF_NATURE:
+						StringCopy(gStringVar2, gNaturesInfo[evolutions[j].params[k].arg1].name);
+						StringAppend(gStringVar4, gStringVar2);
+						StringAppend(gStringVar4, COMPOUND_STRING(" nature"));
+						break;
+						
+						case IF_AMPED_NATURE:
+						StringAppend(gStringVar4, COMPOUND_STRING("amped natures"));
+						break;
+						
+						case IF_LOW_KEY_NATURE:
+						StringAppend(gStringVar4, COMPOUND_STRING("low-Key natures"));
+						break;
+						
+						case IF_RECOIL_DAMAGE_GE:
+						StringAppend(gStringVar4, COMPOUND_STRING("takes >= "));
+						ConvertIntToDecimalStringN(gStringVar2, evolutions[j].params[k].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
+						StringAppend(gStringVar4, gStringVar2);
+						StringAppend(gStringVar4, COMPOUND_STRING(" recoil dmg"));
+						break;
+						
+						case IF_CURRENT_DAMAGE_GE:
+						ConvertIntToDecimalStringN(gStringVar2, evolutions[j].params[k].arg1, STR_CONV_MODE_LEFT_ALIGN, 3);
+						StringAppend(gStringVar4, gStringVar2);
+						StringAppend(gStringVar4, COMPOUND_STRING(" current dmg"));
+						break;
+						
+						case IF_CRITICAL_HITS_GE:
+						ConvertIntToDecimalStringN(gStringVar2, evolutions[j].params[k].arg1, STR_CONV_MODE_LEFT_ALIGN, 2);
+						StringAppend(gStringVar4, gStringVar2);
+						StringAppend(gStringVar4, COMPOUND_STRING(" critical hits"));
+						break;
+						
+						case IF_USED_MOVE_X_TIMES:
+						StringAppend(gStringVar4, COMPOUND_STRING("use move "));
+						StringAppend(gStringVar4, GetMoveName(evolutions[j].params[k].arg1));
+						StringAppend(gStringVar4, COMPOUND_STRING(" "));
+						ConvertIntToDecimalStringN(gStringVar2, evolutions[j].params[k].arg2, STR_CONV_MODE_LEFT_ALIGN, 3);
+						StringAppend(gStringVar4, gStringVar2);
+						StringAppend(gStringVar4, COMPOUND_STRING(" times"));
+						break;
+						
+						// Gen 9
+						case IF_DEFEAT_X_WITH_ITEMS:
+						StringAppend(gStringVar4, COMPOUND_STRING("defeat "));
+						ConvertIntToDecimalStringN(gStringVar2, evolutions[j].params[k].arg3, STR_CONV_MODE_LEFT_ALIGN, 3);
+						StringAppend(gStringVar4, gStringVar2);
+						StringAppend(gStringVar4, COMPOUND_STRING(" "));
+						StringAppend(gStringVar4, GetSpeciesName(evolutions[j].params[k].arg1));
+						StringAppend(gStringVar4, COMPOUND_STRING(" that hold "));
+						CopyItemName(evolutions[j].params[k].arg2, gStringVar2);
+						StringAppend(gStringVar4, gStringVar2);
+						break;
+						
+						case IF_PID_MODULO_100_GT:
+						case IF_PID_MODULO_100_EQ:
+						case IF_PID_MODULO_100_LT:
+						arg = evolutions[j].params[k].arg1;
+						if (condition == IF_PID_MODULO_100_GT && arg < 100 && arg >= 0) arg = 99 - arg;
+						else if (condition == IF_PID_MODULO_100_EQ && arg < 100 && arg >= 0) arg = 1;
+						ConvertIntToDecimalStringN(gStringVar2, arg, STR_CONV_MODE_LEFT_ALIGN, 3);
+						StringAppend(gStringVar4, COMPOUND_STRING("%"));
+						StringAppend(gStringVar4, gStringVar2);
+						break;
+						
+						case IF_MIN_OVERWORLD_STEPS:
+						StringAppend(gStringVar4, COMPOUND_STRING("after "));
+						ConvertIntToDecimalStringN(gStringVar2, evolutions[j].params[k].arg1, STR_CONV_MODE_LEFT_ALIGN, 4);
+						StringAppend(gStringVar4, gStringVar2);
+						StringAppend(gStringVar4, COMPOUND_STRING(" steps"));
+						break;
+						
+						case IF_BAG_ITEM_COUNT:
+						ConvertIntToDecimalStringN(gStringVar2, evolutions[j].params[k].arg2, STR_CONV_MODE_LEFT_ALIGN, 3);
+						StringAppend(gStringVar4, gStringVar2);
+						StringAppend(gStringVar4, COMPOUND_STRING(" "));
+						CopyItemNameHandlePlural(evolutions[j].params[k].arg1, gStringVar2, evolutions[j].params[k].arg2);
+						StringAppend(gStringVar4, gStringVar2);
+						StringAppend(gStringVar4, COMPOUND_STRING(" in bag"));
+						break;
+					}
+				}
+			}
+			
+			if (isAlcremie) fontId = FONT_SMALL_NARROWER;
+			else fontId = GetFontIdToFit(gStringVar4, FONT_SMALL, 0, max_width);
+			
+			StringAppend(gStringVar4, COMPOUND_STRING("."));
+			BreakStringAutomatic(gStringVar4, max_width, MAX_EVO_METHOD_LINES, fontId, HIDE_SCROLL_PROMPT);
+			
+			PrintInfoScreenTextSmall(gStringVar4, fontId, x_offset, BASE_Y + BASE_Y_OFFSET * (NUM_PRE_EVOS + depth) + num_lines); //Print actual instructions
+			
+			num_lines = CountLineBreaks(gStringVar4) * GetFontAttribute(fontId, FONTATTR_MAX_LETTER_HEIGHT);
+			depth++;
+		}
+	}
+	
+	#undef NUM_PRE_EVOS
+	#undef BASE_X
+	#undef BASE_Y
+	#undef BASE_Y_OFFSET
+	#undef DEPTH_X
 }
 
 static void Task_SwitchScreensFromEvolutionScreen(u8 taskId)
@@ -7642,8 +7730,6 @@ static void Task_HandleSearchResultsInput(u8 taskId)
             sPokedexView->selectedPokemon = TryDoPokedexScroll(sPokedexView->selectedPokemon, 0xE);
             if (sPokedexView->scrollTimer)
                 gTasks[taskId].func = Task_WaitForSearchResultsScroll;
-            else if (!sPokedexView->scrollTimer && !sPokedexView->scrollSpeed && sPokedexView->justScrolled)
-                CreateStatBars(&sPokedexView->pokedexList[sPokedexView->selectedPokemon]);
         }
     }
 }
