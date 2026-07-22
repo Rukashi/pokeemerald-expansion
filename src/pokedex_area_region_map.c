@@ -24,17 +24,12 @@ void LoadPokedexAreaMapGfx(void)
     CpuCopy32(gRegionMapInfos[regionMapType].dexMapPalette, &gPlttBufferUnfaded[BG_PLTT_ID(7)], gRegionMapInfos[regionMapType].dexMapPaletteSize);
 }
 
-bool32 TryShowPokedexAreaMap(void)
-{
-    if (!FreeTempTileDataBuffersIfPossible())
-    {
-        ShowBg(POKEDEX_AREA_MAP_BG);
-        return FALSE;
-    }
-    else
-    {
-        return TRUE;
-    }
+bool32 TryShowPokedexAreaMap(void) {
+	if (!FreeTempTileDataBuffersIfPossible()) {
+		ShowBg(POKEDEX_AREA_MAP_BG);
+		return FALSE;
+	}
+	return TRUE;
 }
 
 void PokedexAreaMapChangeBgY(u32 move)

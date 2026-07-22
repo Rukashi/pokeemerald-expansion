@@ -3654,11 +3654,9 @@ static void Task_LoadCryScreen(u8 taskId)
             waveformWindow.paletteNo = 8;
             waveformWindow.yPos = 30;
             waveformWindow.xPos = 12;
-            if (LoadCryWaveformWindow(&waveformWindow, 2))
-            {
-                gMain.state++;
-                gDexCryScreenState = 0;
-            }
+            LoadCryWaveformWindow(&waveformWindow, 2);
+			gMain.state++;
+			gDexCryScreenState = 0;
         }
         break;
     case 7:
@@ -3668,8 +3666,8 @@ static void Task_LoadCryScreen(u8 taskId)
             cryMeter.paletteNo = 9;
             cryMeter.xPos = 18;
             cryMeter.yPos = 3;
-            if (LoadCryMeter(&cryMeter, 3))
-                gMain.state++;
+            LoadCryMeter(&cryMeter, 3);
+			gMain.state++;
             CopyWindowToVram(WIN_VU_METER, COPYWIN_GFX);
             CopyWindowToVram(WIN_INFO, COPYWIN_FULL);
             CopyBgTilemapBufferToVram(0);

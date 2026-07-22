@@ -232,9 +232,9 @@ static u8 UpdateTimeOfDayPaletteFade(void)
 
     // In vanilla Emerald, sprite and background palette are faded on alternate frames
     // In expansion, they are fade simultaneously every two frames to keep the vanilla timing
-    gPaletteFade.objPaletteToggle ^= 1;
-    if (!gPaletteFade.objPaletteToggle)
-        return PALETTE_FADE_STATUS_DELAY;
+    // gPaletteFade.objPaletteToggle ^= 1;
+    // if (!gPaletteFade.objPaletteToggle)
+        // return PALETTE_FADE_STATUS_DELAY;
 
     if (gPaletteFade.delayCounter < gPaletteFadeDelay)
     {
@@ -319,9 +319,9 @@ static u32 UpdateNormalPaletteFade(void)
 
     // In vanilla Emerald, sprite and background palette are faded on alternate frames
     // In expansion, they are fade simultaneously every two frames to keep the vanilla timing
-    gPaletteFade.objPaletteToggle ^= 1;
-    if (!gPaletteFade.objPaletteToggle)
-        return PALETTE_FADE_STATUS_DELAY;
+    // gPaletteFade.objPaletteToggle ^= 1;
+    // if (!gPaletteFade.objPaletteToggle)
+        // return PALETTE_FADE_STATUS_DELAY;
 
     if (gPaletteFade.delayCounter < gPaletteFadeDelay)
     {
@@ -478,16 +478,16 @@ static u32 UpdateFastPaletteFade(void)
         return gPaletteFade.active ? PALETTE_FADE_STATUS_ACTIVE : PALETTE_FADE_STATUS_DONE;
 
 
-    if (gPaletteFade.objPaletteToggle)
-    {
-        paletteOffsetStart = OBJ_PLTT_OFFSET;
+    // if (gPaletteFade.objPaletteToggle)
+    // {
+        // paletteOffsetStart = OBJ_PLTT_OFFSET;
         paletteOffsetEnd = PLTT_BUFFER_SIZE;
-    }
-    else
-    {
+    // }
+    // else
+    // {
         paletteOffsetStart = 0;
-        paletteOffsetEnd = OBJ_PLTT_OFFSET;
-    }
+        // paletteOffsetEnd = OBJ_PLTT_OFFSET;
+    // }
 
     switch (gPaletteFadeSubmode)
     {
@@ -580,12 +580,12 @@ static u32 UpdateFastPaletteFade(void)
         }
     }
 
-    gPaletteFade.objPaletteToggle ^= 1;
+    // gPaletteFade.objPaletteToggle ^= 1;
 
-    if (gPaletteFade.objPaletteToggle)
+    // if (gPaletteFade.objPaletteToggle)
         // gPaletteFade.active cannot change since the last time it was checked. So this
         // is equivalent to `return PALETTE_FADE_STATUS_ACTIVE;`
-        return gPaletteFade.active ? PALETTE_FADE_STATUS_ACTIVE : PALETTE_FADE_STATUS_DONE;
+        // return gPaletteFade.active ? PALETTE_FADE_STATUS_ACTIVE : PALETTE_FADE_STATUS_DONE;
 
     if (gPaletteFade.y - gPaletteFade.deltaY < 0)
         gPaletteFade.y = 0;

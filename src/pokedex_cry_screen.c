@@ -223,47 +223,27 @@ static const struct SpritePalette sCryMeterNeedleSpritePalettes[] =
     {}
 };
 
-bool8 LoadCryWaveformWindow(struct CryScreenWindow *window, u8 windowId)
-{
-    u8 i;
-    bool32 finished = FALSE;
-
-    switch (gDexCryScreenState)
-    {
-    case 0:
-        if (!sDexCryScreen)
-        {
-            sDexCryScreen = AllocZeroed(sizeof(*sDexCryScreen));
-            sCryWaveformWindowTiledata = (u8 *)GetWindowAttribute(windowId, WINDOW_TILE_DATA);
-        }
-
-        sDexCryScreen->unk = window->unk0;
-        sDexCryScreen->playStartPos = window->yPos;
-        sDexCryScreen->cryOverrideCountdown = 0;
-        sDexCryScreen->cryRepeatDelay = 0;
-        sDexCryScreen->cryState = 0;
-        sDexCryScreen->waveformPreviousY = WAVEFORM_WINDOW_HEIGHT / 2;
-        sDexCryScreen->playhead = 0;
-        ShiftWaveformOver(windowId, -8 * window->xPos, TRUE); // Does nothing
-        for (i = 0; i < 224; i++)
-            CopyToWindowPixelBuffer(windowId, sCryScreenBg_Gfx, TILE_SIZE_4BPP, i);
-
-        gDexCryScreenState++;
-        break;
-    case 1:
-        for (i = 0; i < sDexCryScreen->playStartPos * 8; i++)
-            DrawWaveformSegment(i, 0);
-
-        gDexCryScreenState++;
-        break;
-    case 2:
-        DrawWaveformWindow(windowId);
-        LoadPalette(sCryScreenBg_Pal, BG_PLTT_ID(window->paletteNo), PLTT_SIZE_4BPP);
-        finished = TRUE;
-        break;
-    }
-
-    return finished;
+void LoadCryWaveformWindow(struct CryScreenWindow *window, u8 windowId) {
+	u8 i;
+	if (!sDexCryScreen) {
+		sDexCryScreen = AllocZeroed(sizeof(*sDexCryScreen));
+		sCryWaveformWindowTiledata = (u8 *)GetWindowAttribute(windowId, WINDOW_TILE_DATA);
+	}
+	
+	sDexCryScreen->unk = window->unk0;
+	sDexCryScreen->playStartPos = window->yPos;
+	sDexCryScreen->cryOverrideCountdown = 0;
+	sDexCryScreen->cryRepeatDelay = 0;
+	sDexCryScreen->cryState = 0;
+	sDexCryScreen->waveformPreviousY = WAVEFORM_WINDOW_HEIGHT / 2;
+	sDexCryScreen->playhead = 0;
+	
+	for (i = 0; i < 224; i++) CopyToWindowPixelBuffer(windowId, sCryScreenBg_Gfx, TILE_SIZE_4BPP, i);
+	
+	for (i = 0; i < sDexCryScreen->playStartPos * 8; i++) DrawWaveformSegment(i, 0);
+	
+	DrawWaveformWindow(windowId);
+	LoadPalette(sCryScreenBg_Pal, BG_PLTT_ID(window->paletteNo), PLTT_SIZE_4BPP);
 }
 
 void UpdateCryWaveformWindow(u8 windowId)
@@ -447,32 +427,19 @@ static void ShiftWaveformOver(u8 windowId, s16 offset, bool8 rsVertical)
     }
 }
 
-bool8 LoadCryMeter(struct CryScreenWindow *window, u8 windowId)
-{
-    bool8 finished = FALSE;
-
-    switch (gDexCryScreenState)
-    {
-    case 0:
-        if (!sCryMeterNeedle)
-            sCryMeterNeedle = AllocZeroed(sizeof(*sCryMeterNeedle));
-
-        CopyToWindowPixelBuffer(windowId, sCryMeter_Gfx, 0, 0);
-        LoadPalette(sCryMeter_Pal, BG_PLTT_ID(window->paletteNo), PLTT_SIZE_4BPP);
-        gDexCryScreenState++;
-        break;
-    case 1:
-        LoadSpriteSheets(sCryMeterNeedleSpriteSheets);
-        LoadSpritePalettes(sCryMeterNeedleSpritePalettes);
-        sCryMeterNeedle->spriteId = CreateSprite(&sCryMeterNeedleSpriteTemplate, 40 + window->xPos * 8, 56 + window->yPos * 8, 1);
-        sCryMeterNeedle->rotation = MIN_NEEDLE_POS;
-        sCryMeterNeedle->targetRotation = MIN_NEEDLE_POS;
-        sCryMeterNeedle->moveIncrement = 0;
-        finished = TRUE;
-        break;
-    }
-
-    return finished;
+void LoadCryMeter(struct CryScreenWindow *window, u8 windowId) {
+	if (!sCryMeterNeedle) sCryMeterNeedle = AllocZeroed(sizeof(*sCryMeterNeedle));
+	
+	CopyToWindowPixelBuffer(windowId, sCryMeter_Gfx, 0, 0);
+	LoadPalette(sCryMeter_Pal, BG_PLTT_ID(window->paletteNo), PLTT_SIZE_4BPP);
+	
+	LoadSpriteSheets(sCryMeterNeedleSpriteSheets);
+	LoadSpritePalettes(sCryMeterNeedleSpritePalettes);
+	
+	sCryMeterNeedle->spriteId = CreateSprite(&sCryMeterNeedleSpriteTemplate, 40 + window->xPos * 8, 56 + window->yPos * 8, 1);
+	sCryMeterNeedle->rotation = MIN_NEEDLE_POS;
+	sCryMeterNeedle->targetRotation = MIN_NEEDLE_POS;
+	sCryMeterNeedle->moveIncrement = 0;
 }
 
 void FreeCryScreen(void)
